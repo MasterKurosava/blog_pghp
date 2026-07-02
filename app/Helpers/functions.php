@@ -48,11 +48,8 @@ if (!function_exists('config')) {
     {
         static $config = [];
 
-        [$file, $item] = array_pad(explode('.', $key, 2), 2, null);
-
-        if ($item === null) {
-            return $config[$file] ?? $default;
-        }
+        $segments = explode('.', $key);
+        $file = $segments[0];
 
         if (!isset($config[$file])) {
             $path = config_path($file);
@@ -64,7 +61,94 @@ if (!function_exists('config')) {
             $config[$file] = require $path;
         }
 
-        return $config[$file][$item] ?? $default;
+        $value = $config[$file];
+
+        if (count($segments) === 1) {
+            return $value;
+        }
+
+        for ($i = 1, $count = count($segments); $i < $count; $i++) {
+            if (!is_array($value) || !array_key_exists($segments[$i], $value)) {
+                return $default;
+            }
+
+            $value = $value[$segments[$i]];
+        }
+
+        return $value;
+    }
+}
+
+if (!function_exists('str')) {
+    function str(string $key, array $replace = []): string
+    {
+        $value = config('strings.' . $key, '');
+
+        if (!is_string($value)) {
+            return '';
+        }
+
+        if ($replace === []) {
+            return $value;
+        }
+
+        $pairs = [];
+
+        foreach ($replace as $placeholder => $replacement) {
+            $pairs['%' . $placeholder . '%'] = (string) $replacement;
+            $pairs['{' . $placeholder . '}'] = (string) $replacement;
+        }
+
+        return strtr($value, $pairs);
+    }
+}
+
+if (!function_exists('estimate_reading_time')) {
+    function estimate_reading_time(?string $content): int
+    {
+        if ($content === null || $content === '') {
+            return 1;
+        }
+
+        $text = trim(strip_tags($content));
+        $words = preg_split('/\s+/u', $text, -1, PREG_SPLIT_NO_EMPTY);
+        $wordCount = is_array($words) ? count($words) : 0;
+        $wpm = max(1, (int) config('ui.reading_words_per_minute', 200));
+
+        return max(1, (int) ceil($wordCount / $wpm));
+    }
+}
+
+if (!function_exists('format_reading_time')) {
+    function format_reading_time(?string $content): string
+    {
+        return str('article.reading_time', ['minutes' => estimate_reading_time($content)]);
+    }
+}
+
+if (!function_exists('is_article_new')) {
+    function is_article_new(?string $publishedAt): bool
+    {
+        if ($publishedAt === null || $publishedAt === '') {
+            return false;
+        }
+
+        $timestamp = strtotime($publishedAt);
+
+        if ($timestamp === false) {
+            return false;
+        }
+
+        $days = (int) config('ui.article_new_days', 14);
+
+        return $timestamp >= strtotime('-' . $days . ' days');
+    }
+}
+
+if (!function_exists('is_article_popular')) {
+    function is_article_popular(int $views): bool
+    {
+        return $views >= (int) config('ui.article_popular_views', 5000);
     }
 }
 
@@ -184,9 +268,16 @@ if (!function_exists('map_article_card')) {
             'slug' => $article->slug,
             'url' => article_url($article->slug),
             'description' => $article->description ?? '',
+            'content' => $article->content,
             'image' => $article->image ?? '',
             'published_at' => format_date_ru($article->publishedAt),
+            'published_at_iso' => $article->publishedAt ?? '',
             'views' => format_views($article->views),
+            'views_raw' => $article->views,
+            'reading_time' => format_reading_time($article->content),
+            'reading_time_min' => estimate_reading_time($article->content),
+            'is_new' => is_article_new($article->publishedAt),
+            'is_popular' => is_article_popular($article->views),
             'category' => $categoryTitle ?? ($badges[0]['label'] ?? ''),
             'categories' => $badges,
         ];
@@ -332,8 +423,10 @@ if (!function_exists('view_shared_data')) {
         return [
             'name' => config('app.name'),
             'url' => config('app.url'),
-            'defaultMetaDescription' => 'Современный блог о технологиях, дизайне и разработке.',
+            'defaultMetaDescription' => str('meta.default_description'),
             'homeUrl' => url('/'),
+            'strings' => config('strings'),
+            'ui' => config('ui'),
         ];
     }
 }
@@ -347,6 +440,13 @@ if (!function_exists('register_smarty_plugins')) {
 
         $smarty->registerPlugin('function', 'url', static function (array $params): string {
             return url((string) ($params['path'] ?? ''));
+        });
+
+        $smarty->registerPlugin('function', 'str', static function (array $params): string {
+            $key = (string) ($params['key'] ?? '');
+            unset($params['key']);
+
+            return str($key, $params);
         });
     }
 }

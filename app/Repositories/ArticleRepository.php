@@ -119,12 +119,36 @@ final class ArticleRepository extends AbstractRepository implements ArticleRepos
              INNER JOIN article_category ac ON ac.article_id = a.id
              INNER JOIN article_category related_ac ON related_ac.category_id = ac.category_id
              WHERE related_ac.article_id = :article_id
-               AND a.id != :article_id
+               AND a.id != :exclude_article_id
                AND a.published_at IS NOT NULL
              ORDER BY a.published_at DESC, a.id DESC
              LIMIT :limit'
         );
         $statement->bindValue('article_id', $articleId, PDO::PARAM_INT);
+        $statement->bindValue('exclude_article_id', $articleId, PDO::PARAM_INT);
+        $statement->bindValue('limit', $limit, PDO::PARAM_INT);
+        $statement->execute();
+
+        $rows = $statement->fetchAll();
+
+        return array_map(
+            fn (array $row): Article => $this->hydrator->hydrateArticle($row),
+            $rows,
+        );
+    }
+
+    public function searchByTitle(string $query, int $limit): array
+    {
+        $limit = max(1, $limit);
+        $statement = $this->pdo()->prepare(
+            'SELECT ' . self::ARTICLE_COLUMNS . '
+             FROM articles a
+             WHERE a.published_at IS NOT NULL
+               AND a.title LIKE :query
+             ORDER BY a.published_at DESC, a.id DESC
+             LIMIT :limit'
+        );
+        $statement->bindValue('query', '%' . $query . '%');
         $statement->bindValue('limit', $limit, PDO::PARAM_INT);
         $statement->execute();
 

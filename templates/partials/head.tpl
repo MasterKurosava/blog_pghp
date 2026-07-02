@@ -1,21 +1,21 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>{if $title}{$title|escape} — {/if}{$app.name|escape}</title>
-<meta name="description" content="{if $metaDescription}{$metaDescription|escape}{else}{$app.defaultMetaDescription|escape}{/if}">
-{if $robots}<meta name="robots" content="{$robots|escape}">{/if}
-{if $canonical}<link rel="canonical" href="{$canonical|escape}">{/if}
+<title>{if $title|default:''}{$title|escape} — {/if}{$app.name|escape}</title>
+<meta name="description" content="{if $metaDescription|default:''}{$metaDescription|escape}{else}{$app.defaultMetaDescription|escape}{/if}">
+{if $robots|default:''}<meta name="robots" content="{$robots|escape}">{/if}
+{if $canonical|default:''}<link rel="canonical" href="{$canonical|escape}">{/if}
 
-<meta property="og:type" content="{if $ogType}{$ogType|escape}{elseif $ogImage}article{else}website{/if}">
+<meta property="og:type" content="{if $ogType|default:''}{$ogType|escape}{elseif $ogImage|default:''}article{else}website{/if}">
 <meta property="og:site_name" content="{$app.name|escape}">
-<meta property="og:url" content="{if $canonical}{$canonical|escape}{else}{$app.url|escape}{/if}">
-{if $ogTitle}<meta property="og:title" content="{$ogTitle|escape}">{else}<meta property="og:title" content="{if $title}{$title|escape} — {/if}{$app.name|escape}">{/if}
-{if $ogDescription}<meta property="og:description" content="{$ogDescription|escape}">{else}<meta property="og:description" content="{if $metaDescription}{$metaDescription|escape}{else}{$app.defaultMetaDescription|escape}{/if}">{/if}
-{if $ogImage}<meta property="og:image" content="{$ogImage|escape}">{/if}
+<meta property="og:url" content="{if $canonical|default:''}{$canonical|escape}{else}{$app.url|escape}{/if}">
+{if $ogTitle|default:''}<meta property="og:title" content="{$ogTitle|escape}">{else}<meta property="og:title" content="{if $title|default:''}{$title|escape} — {/if}{$app.name|escape}">{/if}
+{if $ogDescription|default:''}<meta property="og:description" content="{$ogDescription|escape}">{else}<meta property="og:description" content="{if $metaDescription|default:''}{$metaDescription|escape}{else}{$app.defaultMetaDescription|escape}{/if}">{/if}
+{if $ogImage|default:''}<meta property="og:image" content="{$ogImage|escape}">{/if}
 
-<meta name="twitter:card" content="{if $ogImage}summary_large_image{else}summary{/if}">
-<meta name="twitter:title" content="{if $ogTitle}{$ogTitle|escape}{elseif $title}{$title|escape} — {$app.name|escape}{else}{$app.name|escape}{/if}">
-<meta name="twitter:description" content="{if $ogDescription}{$ogDescription|escape}{elseif $metaDescription}{$metaDescription|escape}{else}{$app.defaultMetaDescription|escape}{/if}">
-{if $ogImage}<meta name="twitter:image" content="{$ogImage|escape}">{/if}
+<meta name="twitter:card" content="{if $ogImage|default:''}summary_large_image{else}summary{/if}">
+<meta name="twitter:title" content="{if $ogTitle|default:''}{$ogTitle|escape}{elseif $title|default:''}{$title|escape} — {$app.name|escape}{else}{$app.name|escape}{/if}">
+<meta name="twitter:description" content="{if $ogDescription|default:''}{$ogDescription|escape}{elseif $metaDescription|default:''}{$metaDescription|escape}{else}{$app.defaultMetaDescription|escape}{/if}">
+{if $ogImage|default:''}<meta name="twitter:image" content="{$ogImage|escape}">{/if}
 
 <meta name="theme-color" content="#4f46e5">
 <link rel="icon" href="{asset path='icons/favicon.svg'}" type="image/svg+xml">

@@ -54,10 +54,13 @@ final class ArticleService
                 'image' => $article->image ?? '',
                 'published_at' => format_date_ru($article->publishedAt),
                 'views' => format_views($article->views),
+                'reading_time' => format_reading_time($article->content),
+                'share_url' => article_url($article->slug),
                 'categories' => map_category_links($categories),
             ],
             'relatedArticles' => $relatedArticles,
             'hasRelatedArticles' => $relatedArticles !== [],
+            'relatedTitle' => str('article.related_title'),
         ];
     }
 
@@ -83,7 +86,7 @@ final class ArticleService
     private function buildBreadcrumbs(Article $article, ?Category $primaryCategory): array
     {
         $items = [
-            ['label' => 'Главная', 'url' => url('/')],
+            ['label' => str('breadcrumb.home'), 'url' => url('/')],
         ];
 
         if ($primaryCategory !== null) {

@@ -1,5 +1,5 @@
 {if isset($pagination) && $pagination.visible}
-<nav class="pagination{if $class} {$class|escape}{/if}" aria-label="{$ariaLabel|default:'Пагинация'|escape}">
+<nav class="pagination{if $class|default:''} {$class|escape}{/if}" aria-label="{$ariaLabel|default:'Пагинация'|escape}">
     <a
         href="{if $pagination.prev.disabled}#{else}{$pagination.prev.url|escape}{/if}"
         class="pagination__nav pagination__nav--prev{if $pagination.prev.disabled} pagination__nav--disabled{/if}"

@@ -48,15 +48,15 @@
 }
 
 .btn--primary {
-    background-color: var(--color-accent);
+    background: var(--gradient-accent);
     color: var(--color-text-inverse);
-    box-shadow: var(--shadow-xs);
+    box-shadow: var(--shadow-sm);
 
     &:hover {
-        background-color: var(--color-accent-hover);
         color: var(--color-text-inverse);
-        box-shadow: var(--shadow-sm);
+        box-shadow: var(--shadow-md);
         transform: translateY(-1px);
+        filter: brightness(1.03);
     }
 
     &:active {

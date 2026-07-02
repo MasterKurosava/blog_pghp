@@ -1,3 +1,6 @@
+{capture assign="_allArticles"}{str key='category.all_articles'}{/capture}
+{capture assign="_allArticlesAria"}{str key='category.all_articles_aria' title=$category.title|escape}{/capture}
+
 {capture assign="_sectionContent"}
     <div class="category-section__header">
         {include file="components/layout/page-header.tpl"
@@ -6,10 +9,10 @@
             titleHref=$category.url
             titleLevel='2'
             subtitle=$category.description
-            actionLabel='Все статьи'
+            actionLabel=$_allArticles
             actionHref=$category.url
             actionVariant='ghost'
-            actionAriaLabel="Все статьи в категории {$category.title|escape}"
+            actionAriaLabel=$_allArticlesAria
         }
     </div>
 

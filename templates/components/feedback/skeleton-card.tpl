@@ -1,4 +1,4 @@
-<article class="skeleton-card{if $class} {$class|escape}{/if}" aria-hidden="true" role="presentation">
+<article class="skeleton-card{if $class|default:''} {$class|escape}{/if}" aria-hidden="true" role="presentation">
     {include file="components/feedback/skeleton.tpl" variant='image'}
 
     <div class="skeleton-card__body">

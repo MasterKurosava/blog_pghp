@@ -1,4 +1,4 @@
-<nav class="breadcrumb{if $class} {$class|escape}{/if}" aria-label="{$ariaLabel|default:'Навигация'|escape}">
+<nav class="breadcrumb{if $class|default:''} {$class|escape}{/if}" aria-label="{$ariaLabel|default:'Навигация'|escape}">
     <ol class="breadcrumb__list">
         {foreach $items as $item name="breadcrumbItems"}
             <li class="breadcrumb__item">

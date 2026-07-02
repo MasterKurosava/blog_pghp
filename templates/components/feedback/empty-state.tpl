@@ -2,7 +2,7 @@
 {assign var="_buttonLabel" value=$button|default:$actionLabel|default:''}
 {assign var="_buttonUrl" value=$buttonUrl|default:$actionHref|default:''}
 
-<div class="empty-state{if $class} {$class|escape}{/if}" role="status" aria-live="polite">
+<div class="empty-state{if $class|default:''} {$class|escape}{/if}" role="status" aria-live="polite">
     <div class="empty-state__visual">
         <span class="empty-state__ring" aria-hidden="true"></span>
         <div class="empty-state__icon" aria-hidden="true">

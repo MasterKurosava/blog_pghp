@@ -25,6 +25,7 @@ use App\Database\Seeders\DatabaseSeeder;
 use App\Services\ArticleService;
 use App\Services\CategoryService;
 use App\Services\HomeService;
+use App\Services\SearchService;
 use App\Support\SlugGenerator;
 use App\View\View;
 use Faker\Factory as FakerFactory;
@@ -55,6 +56,7 @@ final class AppServiceProvider
         $container->singleton(HomeService::class, fn (Container $c): HomeService => $c->make(HomeService::class));
         $container->singleton(CategoryService::class, fn (Container $c): CategoryService => $c->make(CategoryService::class));
         $container->singleton(ArticleService::class, fn (Container $c): ArticleService => $c->make(ArticleService::class));
+        $container->singleton(SearchService::class, fn (Container $c): SearchService => $c->make(SearchService::class));
 
         $container->singleton(Router::class, fn (Container $c): Router => new Router($c));
         $container->singleton(MiddlewarePipeline::class, fn (Container $c): MiddlewarePipeline => new MiddlewarePipeline(

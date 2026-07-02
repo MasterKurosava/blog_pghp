@@ -49,6 +49,6 @@
 {include file="components/ui/card.tpl"
     tag='article'
     interactive=true
-    class="category-card{if $class} {$class|escape}{/if}"
+    class="category-card{if $class|default:''} {$class|escape}{/if}"
     content=$_cardContent
 }

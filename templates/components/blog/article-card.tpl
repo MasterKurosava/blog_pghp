@@ -5,6 +5,7 @@
     {assign var="_image" value=$article.image|default:''}
     {assign var="_date" value=$article.published_at|default:$article.date|default:''}
     {assign var="_views" value=$article.views|default:''}
+    {assign var="_reading" value=$article.reading_time|default:''}
     {assign var="_categories" value=$article.categories|default:null}
     {assign var="_category" value=$article.category|default:''}
     {assign var="_isNew" value=$article.is_new|default:$article.isNew|default:false}
@@ -16,6 +17,7 @@
     {assign var="_image" value=$image|default:''}
     {assign var="_date" value=$date|default:''}
     {assign var="_views" value=$views|default:''}
+    {assign var="_reading" value=$reading_time|default:''}
     {assign var="_categories" value=$categories|default:null}
     {assign var="_category" value=$category|default:''}
     {assign var="_isNew" value=$isNew|default:false}
@@ -29,12 +31,11 @@
 {if isset($showImage) && !$showImage}{assign var="_showImage" value=false}{/if}
 {if isset($showDescription) && !$showDescription}{assign var="_showDescription" value=false}{/if}
 {if isset($showMeta) && !$showMeta}{assign var="_showMeta" value=false}{/if}
-
 {if $_showImage && $_image === ''}{assign var="_showImage" value=false}{/if}
 
 {capture assign="_cardContent"}
     {if $_showImage && $_url}
-        <a href="{$_url|escape}" class="article-card__media" tabindex="-1" aria-label="{$_title|escape}">
+        <a href="{$_url|escape}" class="article-card__media" tabindex="-1" aria-label="{str key='article_card.read_aria' title=$_title|escape}">
             <img
                 src="{$_image|escape}"
                 alt=""
@@ -79,7 +80,7 @@
             <p class="article-card__description">{$_description|escape}</p>
         {/if}
 
-        {if $_showMeta && ($_date || $_views)}
+        {if $_showMeta && ($_date || $_views || $_reading)}
             <div class="article-card__meta">
                 {if $_date}
                     <span class="article-card__meta-item">
@@ -87,11 +88,13 @@
                     </span>
                 {/if}
 
-                {if $_date && $_views}
-                    <span class="article-card__meta-divider" aria-hidden="true"></span>
+                {if $_reading}
+                    {if $_date}<span class="article-card__meta-divider" aria-hidden="true"></span>{/if}
+                    <span class="article-card__meta-item">{$_reading|escape}</span>
                 {/if}
 
                 {if $_views}
+                    {if $_date || $_reading}<span class="article-card__meta-divider" aria-hidden="true"></span>{/if}
                     <span class="article-card__meta-item">
                         {include file="components/ui/icon.tpl" name="eye" size="sm" ariaHidden=true}
                         <span>{$_views|escape}</span>
@@ -100,25 +103,40 @@
             </div>
         {/if}
 
-        {if $_url}
-            <div class="article-card__footer">
+        <div class="article-card__footer">
+            {if $_url}
+                {capture assign="_readLabel"}{str key='article_card.read'}{/capture}
+                {capture assign="_readAria"}{str key='article_card.read_aria' title=$_title}{/capture}
                 {include file="components/ui/button.tpl"
                     variant='text'
                     size='md'
                     href=$_url
-                    label='Читать'
+                    label=$_readLabel
                     icon='arrow-right'
                     iconPosition='right'
-                    ariaLabel="Читать: {$_title|escape}"
+                    ariaLabel=$_readAria
                 }
-            </div>
-        {/if}
+            {/if}
+            {if $_url}
+                {capture assign="_shareAria"}{str key='article_card.share_aria' title=$_title}{/capture}
+                <button
+                    type="button"
+                    class="btn btn--ghost btn--sm article-card__share js-share-trigger"
+                    data-share-url="{$_url|escape}"
+                    data-share-title="{$_title|escape}"
+                    aria-label="{$_shareAria|escape}"
+                >
+                    {include file="components/ui/icon.tpl" name="share" size="sm" class="btn__icon" ariaHidden=true}
+                    <span class="btn__label">{str key='article_card.share'}</span>
+                </button>
+            {/if}
+        </div>
     </div>
 {/capture}
 
 {include file="components/ui/card.tpl"
     tag='article'
     interactive=true
-    class="article-card{if $class} {$class|escape}{/if}"
+    class="article-card{if $class|default:''} {$class|escape}{/if}"
     content=$_cardContent
 }

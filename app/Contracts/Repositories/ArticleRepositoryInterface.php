@@ -31,6 +31,8 @@ interface ArticleRepositoryInterface
 
     public function findPaginated(int $page, int $perPage, ?int $categoryId = null, string $sort = 'newest'): PaginationResult;
 
+    public function searchByTitle(string $query, int $limit): array;
+
     public function findCategoriesByArticleId(int $articleId): array;
 
     public function create(CreateArticleData $data): int;

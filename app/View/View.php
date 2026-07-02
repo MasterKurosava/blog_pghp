@@ -25,7 +25,7 @@ final class View
         $smarty->caching = false;
 
         if (config('app.debug')) {
-            $smarty->error_reporting = E_ALL;
+            $smarty->error_reporting = E_ALL & ~E_WARNING & ~E_NOTICE;
         }
 
         $smarty->assign('app', view_shared_data());
@@ -37,7 +37,20 @@ final class View
 
     public function render(string $template, array $data = [], ?string $layout = 'layouts/main'): string
     {
-        foreach ($data as $key => $value) {
+        $defaults = [
+            'title' => '',
+            'metaDescription' => '',
+            'robots' => '',
+            'canonical' => '',
+            'ogType' => '',
+            'ogTitle' => '',
+            'ogDescription' => '',
+            'ogImage' => '',
+            'mainClass' => '',
+            'fullWidthContent' => false,
+        ];
+
+        foreach (array_merge($defaults, $data) as $key => $value) {
             $this->smarty->assign($key, $value);
         }
 

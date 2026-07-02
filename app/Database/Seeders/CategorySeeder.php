@@ -9,31 +9,22 @@ use App\Database\Factories\CategoryFactory;
 
 final class CategorySeeder extends AbstractSeeder
 {
-    private const CATEGORIES = [
-        ['title' => 'Технологии', 'slug' => 'tehnologii'],
-        ['title' => 'Искусственный интеллект', 'slug' => 'iskusstvennyy-intellekt'],
-        ['title' => 'Разработка', 'slug' => 'razrabotka'],
-        ['title' => 'Дизайн', 'slug' => 'dizayn'],
-        ['title' => 'Бизнес', 'slug' => 'biznes'],
-        ['title' => 'Стартапы', 'slug' => 'startapy'],
-        ['title' => 'Маркетинг', 'slug' => 'marketing'],
-        ['title' => 'Карьера', 'slug' => 'karera'],
-    ];
-
     public function run(): void
     {
         $repository = $this->container->get(CategoryRepositoryInterface::class);
         $factory = $this->container->make(CategoryFactory::class);
+        $categories = config('categories.items', []);
 
-        foreach (self::CATEGORIES as $category) {
+        foreach ($categories as $category) {
             $data = $factory->make(
-                title: $category['title'],
-                slug: $category['slug'],
+                title: (string) $category['title'],
+                slug: (string) $category['slug'],
+                description: (string) ($category['description'] ?? ''),
             );
 
             $repository->create($data);
         }
 
-        echo 'Seeded categories: ' . count(self::CATEGORIES) . PHP_EOL;
+        echo 'Seeded categories: ' . count($categories) . PHP_EOL;
     }
 }

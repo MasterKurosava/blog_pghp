@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use App\Controllers\ApiController;
 use App\Controllers\ArticleController;
 use App\Controllers\CategoryController;
 use App\Controllers\HomeController;
@@ -12,4 +13,6 @@ return static function (Router $router): void {
     $router->get('/categories', [CategoryController::class, 'index']);
     $router->get('/category/{slug}', [CategoryController::class, 'show']);
     $router->get('/article/{slug}', [ArticleController::class, 'show']);
+    $router->get('/api/search', [ApiController::class, 'search']);
+    $router->get('/api/category/{slug}/articles', [ApiController::class, 'categoryArticles']);
 };

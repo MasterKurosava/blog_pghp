@@ -17,10 +17,16 @@ final class HomeService
     public function getIndexPageData(): array
     {
         return [
-            'title' => (string) config('home.meta_title', 'Главная'),
+            'title' => str('home.meta_title'),
             'mainClass' => 'main--home',
             'fullWidthContent' => true,
-            'hero' => config('home.hero', []),
+            'hero' => [
+                'badge' => str('hero.badge'),
+                'title' => str('hero.title'),
+                'subtitle' => str('hero.subtitle'),
+                'cta' => str('hero.cta'),
+                'cta_href' => '#categories',
+            ],
             'categories' => $this->buildCategories(),
         ];
     }
@@ -41,26 +47,15 @@ final class HomeService
                 'url' => url('category/' . $item->category->slug),
                 'description' => $item->category->description ?? '',
                 'articles' => array_map(
-                    fn (Article $article): array => $this->mapArticle($article, $item->category->title),
+                    fn (Article $article): array => map_article_card(
+                        $article,
+                        $item->category->title,
+                    ),
                     array_slice($item->articles, 0, $limit),
                 ),
             ];
         }
 
         return $result;
-    }
-
-    private function mapArticle(Article $article, string $categoryTitle): array
-    {
-        return [
-            'title' => $article->title,
-            'slug' => $article->slug,
-            'url' => url('article/' . $article->slug),
-            'description' => $article->description ?? '',
-            'image' => $article->image ?? '',
-            'published_at' => format_date_ru($article->publishedAt),
-            'views' => format_views($article->views),
-            'category' => $categoryTitle,
-        ];
     }
 }

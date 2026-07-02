@@ -3,11 +3,25 @@
 .hero {
     position: relative;
     overflow: hidden;
-    padding-block: clamp(var(--space-16), 10vw, 7rem);
-    background:
-        radial-gradient(ellipse 80% 60% at 50% -20%, rgba(79, 70, 229, 0.08), transparent),
-        linear-gradient(180deg, var(--color-bg) 0%, var(--color-bg-subtle) 100%);
+    padding-block: clamp(var(--space-16), 12vw, 8rem);
+    background: var(--gradient-hero);
     border-bottom: 1px solid var(--color-border);
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background: var(--gradient-glow);
+        pointer-events: none;
+    }
+
+    &::after {
+        content: '';
+        position: absolute;
+        inset: auto 0 0;
+        height: 1px;
+        background: linear-gradient(90deg, transparent, rgba(99, 102, 241, 0.35), transparent);
+    }
 }
 
 .hero__decor {
@@ -15,13 +29,17 @@
     inset: 0;
     pointer-events: none;
     background-image:
-        radial-gradient(circle at 20% 80%, rgba(79, 70, 229, 0.04) 0%, transparent 50%),
-        radial-gradient(circle at 80% 20%, rgba(79, 70, 229, 0.03) 0%, transparent 40%);
+        radial-gradient(circle at 15% 85%, rgba(99, 102, 241, 0.08) 0%, transparent 45%),
+        radial-gradient(circle at 85% 15%, rgba(59, 130, 246, 0.06) 0%, transparent 40%),
+        linear-gradient(rgba(99, 102, 241, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(99, 102, 241, 0.03) 1px, transparent 1px);
+    background-size: auto, auto, 2rem 2rem, 2rem 2rem;
+    mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.8), transparent 95%);
 }
 
 .hero__inner {
     position: relative;
-    max-width: var(--container-narrow);
+    max-width: 44rem;
     text-align: center;
     margin-inline: auto;
 }
@@ -33,15 +51,17 @@
 
 .hero__title {
     margin-bottom: var(--space-5);
+    font-size: clamp(var(--font-size-3xl), 5vw, var(--font-size-5xl));
     font-weight: var(--font-weight-bold);
     letter-spacing: var(--letter-spacing-tight);
+    line-height: 1.05;
 }
 
 .hero__subtitle {
-    max-width: 32rem;
+    max-width: 36rem;
     margin-inline: auto;
     margin-bottom: var(--space-8);
-    font-size: var(--font-size-lg);
+    font-size: clamp(var(--font-size-md), 2.5vw, var(--font-size-lg));
     line-height: var(--line-height-relaxed);
     color: var(--color-text-muted);
 }

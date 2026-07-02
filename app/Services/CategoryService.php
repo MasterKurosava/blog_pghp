@@ -21,8 +21,8 @@ final class CategoryService
     public function getIndexPageData(): array
     {
         return [
-            'title' => 'Категории',
-            'heading' => 'Категории',
+            'title' => str('category.index_title'),
+            'heading' => str('category.index_heading'),
         ];
     }
 
@@ -52,7 +52,7 @@ final class CategoryService
             'metaDescription' => $this->buildMetaDescription($category),
             'canonical' => category_url($category->slug, $pagination->page, $sort),
             'breadcrumbs' => [
-                ['label' => 'Главная', 'url' => url('/')],
+                ['label' => str('breadcrumb.home'), 'url' => url('/')],
                 ['label' => $category->title],
             ],
             'category' => [
@@ -66,6 +66,24 @@ final class CategoryService
             'pagination' => build_pagination($pagination->page, $pagination->lastPage(), $urlBuilder),
             'sort' => $this->buildSortOptions($category->slug, $pagination->page, $sort),
             'homeUrl' => url('/'),
+            'categorySlug' => $category->slug,
+            'currentSort' => $sort,
+        ];
+    }
+
+    public function getArticlesApiData(string $slug, int $page, string $sort): array
+    {
+        $data = $this->getShowPageData($slug, $page, $sort);
+        $pagination = $data['pagination'];
+        $lastPage = (int) ($pagination['last'] ?? 1);
+        $currentPage = (int) ($pagination['current'] ?? $page);
+
+        return [
+            'articles' => $data['articles'],
+            'pagination' => $pagination,
+            'page' => $currentPage,
+            'lastPage' => $lastPage,
+            'hasMore' => ($pagination['visible'] ?? false) && $currentPage < $lastPage,
         ];
     }
 

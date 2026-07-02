@@ -25,11 +25,16 @@
                 </time>
             {/if}
 
+            {if $article.reading_time}
+                <span class="article-page__meta-divider" aria-hidden="true"></span>
+                <span class="article-page__meta-item">{$article.reading_time|escape}</span>
+            {/if}
+
             {if $article.views}
                 <span class="article-page__meta-divider" aria-hidden="true"></span>
                 <span class="article-page__meta-item">
                     {include file="components/ui/icon.tpl" name="eye" size="sm" ariaHidden=true}
-                    <span>{$article.views|escape} просмотров</span>
+                    <span>{str key='article.views' count=$article.views|escape}</span>
                 </span>
             {/if}
 
@@ -46,6 +51,17 @@
         {if $article.description}
             {include file="components/layout/page-subtitle.tpl" text=$article.description size='lg' class='article-page__lead'}
         {/if}
+
+        <button
+            type="button"
+            class="btn btn--outline btn--md article-page__share js-share-trigger"
+            data-share-url="{$article.share_url|escape}"
+            data-share-title="{$article.title|escape}"
+            aria-label="{str key='article_card.share_aria' title=$article.title|escape}"
+        >
+            {include file="components/ui/icon.tpl" name="share" size="sm" class="btn__icon" ariaHidden=true}
+            <span class="btn__label">{str key='article_card.share'}</span>
+        </button>
     </header>
 
     <div class="article-page__content article-prose">
@@ -56,7 +72,7 @@
         {include file="components/ui/divider.tpl" size='lg'}
 
         {capture assign="_relatedSection"}
-            {include file="components/layout/page-title.tpl" title='Похожие статьи' level='2' class='article-page__related-title'}
+            {include file="components/layout/page-title.tpl" title=$relatedTitle level='2' class='article-page__related-title'}
 
             {capture assign="_relatedGrid"}
                 {foreach $relatedArticles as $relatedArticle}

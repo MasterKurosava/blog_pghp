@@ -12,9 +12,11 @@
                     {include file="components/feedback/skeleton-group.tpl" count=3}
                 </div>
 
+                {capture assign="_emptyTitle"}{str key='home.empty_title'}{/capture}
+                {capture assign="_emptyDescription"}{str key='home.empty_description'}{/capture}
                 {include file="components/feedback/empty-state.tpl"
-                    title='Материалы скоро появятся'
-                    description='Мы готовим свежие публикации. Загляните позже.'
+                    title=$_emptyTitle
+                    description=$_emptyDescription
                     icon='file'
                 }
             </div>
