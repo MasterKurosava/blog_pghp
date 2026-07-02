@@ -6,10 +6,14 @@
 <body>
     {include file="partials/header.tpl"}
 
-    <main class="main">
-        <div class="container">
+    <main class="main{if $mainClass} {$mainClass|escape}{/if}">
+        {if $fullWidthContent}
             {$content nofilter}
-        </div>
+        {else}
+            <div class="container">
+                {$content nofilter}
+            </div>
+        {/if}
     </main>
 
     {include file="partials/footer.tpl"}

@@ -1,0 +1,50 @@
+@use '../utils/variables' as *;
+
+body {
+    font-family: $font-family;
+    font-size: 1rem;
+    line-height: 1.6;
+    color: $color-text;
+    background-color: $color-bg-subtle;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+a {
+    color: $color-accent;
+    text-decoration: none;
+    transition: color $transition-fast;
+
+    &:hover {
+        color: $color-accent-hover;
+    }
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-weight: 600;
+    line-height: 1.2;
+    color: $color-text;
+    letter-spacing: -0.02em;
+}
+
+h1 {
+    font-size: clamp(2.25rem, 5vw, 3.5rem);
+}
+
+h2 {
+    font-size: clamp(1.75rem, 3vw, 2.25rem);
+}
+
+h3 {
+    font-size: 1.25rem;
+}
+
+p {
+    color: $color-text-muted;
+}

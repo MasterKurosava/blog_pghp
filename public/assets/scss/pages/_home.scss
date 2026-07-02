@@ -1,0 +1,14 @@
+@use '../utils/variables' as *;
+
+.home__body {
+    padding-block: clamp(3rem, 6vw, 5rem);
+}
+
+.home__empty {
+    text-align: center;
+    padding-block: 4rem;
+}
+
+.home__empty-text {
+    font-size: 1.0625rem;
+}

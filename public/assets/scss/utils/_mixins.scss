@@ -1,0 +1,42 @@
+@use '../utils/variables' as *;
+
+@mixin respond-to($breakpoint) {
+    @if $breakpoint == sm {
+        @media (min-width: $breakpoint-sm) {
+            @content;
+        }
+    } @else if $breakpoint == md {
+        @media (min-width: $breakpoint-md) {
+            @content;
+        }
+    } @else if $breakpoint == lg {
+        @media (min-width: $breakpoint-lg) {
+            @content;
+        }
+    }
+}
+
+@mixin focus-ring {
+    &:focus-visible {
+        outline: 2px solid $color-accent;
+        outline-offset: 2px;
+    }
+}
+
+@mixin card-surface {
+    background-color: $color-bg;
+    border: 1px solid $color-border;
+    border-radius: $radius-lg;
+    box-shadow: $shadow-sm;
+    transition:
+        border-color $transition-base,
+        box-shadow $transition-base,
+        transform $transition-base;
+}
+
+@mixin text-truncate($lines: 2) {
+    display: -webkit-box;
+    -webkit-line-clamp: $lines;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}

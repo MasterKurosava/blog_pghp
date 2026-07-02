@@ -133,6 +133,40 @@ if (!function_exists('url')) {
     }
 }
 
+if (!function_exists('format_date_ru')) {
+    function format_date_ru(?string $date): string
+    {
+        if ($date === null || $date === '') {
+            return '';
+        }
+
+        $months = [
+            1 => 'января', 2 => 'февраля', 3 => 'марта', 4 => 'апреля',
+            5 => 'мая', 6 => 'июня', 7 => 'июля', 8 => 'августа',
+            9 => 'сентября', 10 => 'октября', 11 => 'ноября', 12 => 'декабря',
+        ];
+
+        $timestamp = strtotime($date);
+
+        if ($timestamp === false) {
+            return '';
+        }
+
+        $day = (int) date('j', $timestamp);
+        $month = $months[(int) date('n', $timestamp)] ?? '';
+        $year = date('Y', $timestamp);
+
+        return "{$day} {$month} {$year}";
+    }
+}
+
+if (!function_exists('format_views')) {
+    function format_views(int $views): string
+    {
+        return number_format($views, 0, '', ' ');
+    }
+}
+
 if (!function_exists('asset')) {
     function asset(string $path): string
     {

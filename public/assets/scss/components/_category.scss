@@ -1,0 +1,71 @@
+@use '../utils/variables' as *;
+@use '../utils/mixins' as *;
+
+.category-block {
+    @include card-surface;
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    margin-bottom: 2rem;
+
+    &:hover {
+        border-color: $color-border-hover;
+        box-shadow: $shadow-md;
+    }
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.category-block__header {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    margin-bottom: 2rem;
+
+    @include respond-to(md) {
+        flex-direction: row;
+        align-items: flex-start;
+        justify-content: space-between;
+    }
+}
+
+.category-block__info {
+    flex: 1;
+}
+
+.category-block__title {
+    margin-bottom: 0.5rem;
+}
+
+.category-block__title-link {
+    color: $color-text;
+    transition: color $transition-fast;
+
+    &:hover {
+        color: $color-accent;
+    }
+}
+
+.category-block__description {
+    max-width: 40rem;
+    font-size: 1rem;
+    line-height: 1.65;
+}
+
+.category-block__all {
+    flex-shrink: 0;
+    white-space: nowrap;
+}
+
+.category-block__grid {
+    display: grid;
+    gap: 1.5rem;
+
+    @include respond-to(md) {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    @include respond-to(lg) {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
