@@ -167,6 +167,158 @@ if (!function_exists('format_views')) {
     }
 }
 
+if (!function_exists('map_article_card')) {
+    function map_article_card(
+        \App\Models\Article $article,
+        ?string $categoryTitle = null,
+        array $categories = [],
+    ): array {
+        $badges = $categories;
+
+        if ($badges === [] && $categoryTitle !== null && $categoryTitle !== '') {
+            $badges = [['label' => $categoryTitle, 'variant' => 'category']];
+        }
+
+        return [
+            'title' => $article->title,
+            'slug' => $article->slug,
+            'url' => article_url($article->slug),
+            'description' => $article->description ?? '',
+            'image' => $article->image ?? '',
+            'published_at' => format_date_ru($article->publishedAt),
+            'views' => format_views($article->views),
+            'category' => $categoryTitle ?? ($badges[0]['label'] ?? ''),
+            'categories' => $badges,
+        ];
+    }
+}
+
+if (!function_exists('map_category_badges')) {
+    function map_category_badges(array $categories): array
+    {
+        return array_map(
+            static fn (\App\Models\Category $category): array => [
+                'label' => $category->title,
+                'variant' => 'category',
+            ],
+            $categories,
+        );
+    }
+}
+
+if (!function_exists('map_category_links')) {
+    function map_category_links(array $categories): array
+    {
+        return array_map(
+            static fn (\App\Models\Category $category): array => [
+                'label' => $category->title,
+                'url' => category_url($category->slug),
+            ],
+            $categories,
+        );
+    }
+}
+
+if (!function_exists('article_url')) {
+    function article_url(string $slug): string
+    {
+        return url('article/' . ltrim($slug, '/'));
+    }
+}
+
+if (!function_exists('category_url')) {
+    function category_url(string $slug, int $page = 1, string $sort = 'newest'): string
+    {
+        $path = url('category/' . ltrim($slug, '/'));
+        $query = [];
+
+        if ($page > 1) {
+            $query['page'] = $page;
+        }
+
+        $defaultSort = (string) config('category.default_sort', 'newest');
+
+        if ($sort !== $defaultSort) {
+            $query['sort'] = $sort;
+        }
+
+        if ($query === []) {
+            return $path;
+        }
+
+        return $path . '?' . http_build_query($query);
+    }
+}
+
+if (!function_exists('pagination_range')) {
+    function pagination_range(int $current, int $last): array
+    {
+        if ($last <= 7) {
+            return range(1, $last);
+        }
+
+        $pages = [1];
+        $start = max(2, $current - 1);
+        $end = min($last - 1, $current + 1);
+
+        if ($start > 2) {
+            $pages[] = '...';
+        }
+
+        for ($i = $start; $i <= $end; $i++) {
+            $pages[] = $i;
+        }
+
+        if ($end < $last - 1) {
+            $pages[] = '...';
+        }
+
+        $pages[] = $last;
+
+        return $pages;
+    }
+}
+
+if (!function_exists('build_pagination')) {
+    function build_pagination(int $current, int $last, callable $urlBuilder): array
+    {
+        if ($last <= 1) {
+            return ['visible' => false];
+        }
+
+        $items = [];
+
+        foreach (pagination_range($current, $last) as $page) {
+            if ($page === '...') {
+                $items[] = ['ellipsis' => true];
+                continue;
+            }
+
+            $pageNumber = (int) $page;
+            $items[] = [
+                'number' => $pageNumber,
+                'url' => $urlBuilder($pageNumber),
+                'active' => $pageNumber === $current,
+            ];
+        }
+
+        return [
+            'visible' => true,
+            'current' => $current,
+            'last' => $last,
+            'items' => $items,
+            'prev' => [
+                'url' => $urlBuilder(max(1, $current - 1)),
+                'disabled' => $current <= 1,
+            ],
+            'next' => [
+                'url' => $urlBuilder(min($last, $current + 1)),
+                'disabled' => $current >= $last,
+            ],
+        ];
+    }
+}
+
 if (!function_exists('asset')) {
     function asset(string $path): string
     {

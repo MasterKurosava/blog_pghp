@@ -27,6 +27,9 @@ final class CategoryController extends Controller
 
     public function show(string $slug): Response
     {
-        return $this->render('pages/category', $this->categories->getShowPageData($slug));
+        $page = (int) $this->request->query('page', 1);
+        $sort = (string) $this->request->query('sort', 'newest');
+
+        return $this->render('pages/category', $this->categories->getShowPageData($slug, $page, $sort));
     }
 }

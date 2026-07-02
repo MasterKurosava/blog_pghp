@@ -1,7 +1,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>{if $title}{$title|escape} — {/if}{$app.name|escape}</title>
-<meta name="description" content="Современный блог о технологиях, дизайне и разработке.">
+<meta name="description" content="{if $metaDescription}{$metaDescription|escape}{else}Современный блог о технологиях, дизайне и разработке.{/if}">
+{if $canonical}<link rel="canonical" href="{$canonical|escape}">{/if}
+{if $ogTitle}<meta property="og:title" content="{$ogTitle|escape}">{/if}
+{if $ogDescription}<meta property="og:description" content="{$ogDescription|escape}">{/if}
+{if $ogImage}<meta property="og:image" content="{$ogImage|escape}">{/if}
+<meta property="og:type" content="article">
 
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

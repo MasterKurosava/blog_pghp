@@ -136,6 +136,74 @@ final class ArticleRepository extends AbstractRepository implements ArticleRepos
         );
     }
 
+    public function findRandomExcluding(array $excludeIds, int $limit): array
+    {
+        if ($limit <= 0) {
+            return [];
+        }
+
+        $excludeIds = array_values(array_unique(array_map('intval', $excludeIds)));
+        $excludeClause = '';
+        $params = [];
+
+        if ($excludeIds !== []) {
+            $placeholders = implode(',', array_fill(0, count($excludeIds), '?'));
+            $excludeClause = 'AND a.id NOT IN (' . $placeholders . ')';
+            $params = $excludeIds;
+        }
+
+        $statement = $this->pdo()->prepare(
+            'SELECT ' . self::ARTICLE_COLUMNS . '
+             FROM articles a
+             WHERE a.published_at IS NOT NULL
+             ' . $excludeClause . '
+             ORDER BY RAND()
+             LIMIT :limit'
+        );
+
+        foreach ($params as $index => $id) {
+            $statement->bindValue($index + 1, $id, PDO::PARAM_INT);
+        }
+
+        $statement->bindValue(count($params) + 1, $limit, PDO::PARAM_INT);
+        $statement->execute();
+
+        $rows = $statement->fetchAll();
+
+        return array_map(
+            fn (array $row): Article => $this->hydrator->hydrateArticle($row),
+            $rows,
+        );
+    }
+
+    public function findCategoriesGroupedByArticleIds(array $articleIds): array
+    {
+        $articleIds = array_values(array_unique(array_map('intval', $articleIds)));
+
+        if ($articleIds === []) {
+            return [];
+        }
+
+        $placeholders = implode(',', array_fill(0, count($articleIds), '?'));
+        $statement = $this->pdo()->prepare(
+            'SELECT ac.article_id, ' . self::CATEGORY_COLUMNS . '
+             FROM categories c
+             INNER JOIN article_category ac ON ac.category_id = c.id
+             WHERE ac.article_id IN (' . $placeholders . ')
+             ORDER BY ac.article_id ASC, c.title ASC'
+        );
+        $statement->execute($articleIds);
+
+        $grouped = [];
+
+        foreach ($statement->fetchAll() as $row) {
+            $articleId = (int) $row['article_id'];
+            $grouped[$articleId][] = $this->hydrator->hydrateCategory($row);
+        }
+
+        return $grouped;
+    }
+
     public function countByCategory(int $categoryId): int
     {
         $statement = $this->pdo()->prepare(
@@ -150,11 +218,10 @@ final class ArticleRepository extends AbstractRepository implements ArticleRepos
         return (int) $statement->fetchColumn();
     }
 
-    public function findPaginated(int $page, int $perPage, ?int $categoryId = null): PaginationResult
+    public function findPaginated(int $page, int $perPage, ?int $categoryId = null, string $sort = 'newest'): PaginationResult
     {
-        $page = max(1, $page);
         $perPage = max(1, $perPage);
-        $offset = ($page - 1) * $perPage;
+        $sort = $this->resolveSort($sort);
 
         $conditions = ['a.published_at IS NOT NULL'];
         $params = [];
@@ -168,6 +235,7 @@ final class ArticleRepository extends AbstractRepository implements ArticleRepos
         $join = $categoryId !== null
             ? 'INNER JOIN article_category ac ON ac.article_id = a.id'
             : '';
+        $orderBy = $this->resolveOrderBy($sort);
 
         $countStatement = $this->pdo()->prepare(
             "SELECT COUNT(DISTINCT a.id)
@@ -178,12 +246,16 @@ final class ArticleRepository extends AbstractRepository implements ArticleRepos
         $countStatement->execute($params);
         $total = (int) $countStatement->fetchColumn();
 
+        $lastPage = $total > 0 ? (int) ceil($total / $perPage) : 1;
+        $page = min(max(1, $page), $lastPage);
+        $offset = ($page - 1) * $perPage;
+
         $dataStatement = $this->pdo()->prepare(
             "SELECT DISTINCT " . self::ARTICLE_COLUMNS . "
              FROM articles a
              {$join}
              WHERE {$where}
-             ORDER BY a.published_at DESC, a.id DESC
+             ORDER BY {$orderBy}
              LIMIT :limit OFFSET :offset"
         );
 
@@ -207,6 +279,23 @@ final class ArticleRepository extends AbstractRepository implements ArticleRepos
             page: $page,
             perPage: $perPage,
         );
+    }
+
+    private function resolveSort(string $sort): string
+    {
+        return match ($sort) {
+            'oldest', 'views' => $sort,
+            default => 'newest',
+        };
+    }
+
+    private function resolveOrderBy(string $sort): string
+    {
+        return match ($sort) {
+            'oldest' => 'a.published_at ASC, a.id ASC',
+            'views' => 'a.views DESC, a.id DESC',
+            default => 'a.published_at DESC, a.id DESC',
+        };
     }
 
     public function findCategoriesByArticleId(int $articleId): array

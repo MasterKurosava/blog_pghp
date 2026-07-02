@@ -23,5 +23,7 @@
 @use 'components/navigation/pagination';
 @use 'components/feedback/empty-state';
 @use 'pages/home';
+@use 'pages/category';
+@use 'pages/article';
 @use 'pages/error';
 @use 'utilities/animations';

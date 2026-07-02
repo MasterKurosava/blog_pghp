@@ -23,9 +23,13 @@ interface ArticleRepositoryInterface
 
     public function findRelated(int $articleId, int $limit): array;
 
+    public function findRandomExcluding(array $excludeIds, int $limit): array;
+
+    public function findCategoriesGroupedByArticleIds(array $articleIds): array;
+
     public function countByCategory(int $categoryId): int;
 
-    public function findPaginated(int $page, int $perPage, ?int $categoryId = null): PaginationResult;
+    public function findPaginated(int $page, int $perPage, ?int $categoryId = null, string $sort = 'newest'): PaginationResult;
 
     public function findCategoriesByArticleId(int $articleId): array;
 
