@@ -31,6 +31,30 @@ final class Request
         );
     }
 
+    public function withQuery(array $query): self
+    {
+        return new self(
+            query: $query,
+            request: $this->request,
+            files: $this->files,
+            server: $this->server,
+            uri: $this->uri,
+            method: $this->method,
+        );
+    }
+
+    public function withPost(array $request): self
+    {
+        return new self(
+            query: $this->query,
+            request: $request,
+            files: $this->files,
+            server: $this->server,
+            uri: $this->uri,
+            method: $this->method,
+        );
+    }
+
     public function method(): string
     {
         return $this->method;
@@ -46,14 +70,58 @@ final class Request
         return $this->method === strtoupper($method);
     }
 
+    public function query(?string $key = null, mixed $default = null): mixed
+    {
+        if ($key === null) {
+            return $this->query;
+        }
+
+        return $this->query[$key] ?? $default;
+    }
+
     public function get(string $key, mixed $default = null): mixed
     {
-        return $this->query[$key] ?? $default;
+        return $this->query($key, $default);
     }
 
     public function allGet(): array
     {
         return $this->query;
+    }
+
+    public function input(?string $key = null, mixed $default = null): mixed
+    {
+        if ($key === null) {
+            return array_merge($this->query, $this->request);
+        }
+
+        return $this->request[$key] ?? $this->query[$key] ?? $default;
+    }
+
+    public function has(string $key): bool
+    {
+        return array_key_exists($key, $this->request) || array_key_exists($key, $this->query);
+    }
+
+    public function only(array $keys): array
+    {
+        $data = $this->input();
+
+        return array_intersect_key($data, array_flip($keys));
+    }
+
+    public function except(array $keys): array
+    {
+        $data = $this->input();
+
+        return array_diff_key($data, array_flip($keys));
+    }
+
+    public function filled(string $key): bool
+    {
+        $value = $this->input($key);
+
+        return $value !== null && $value !== '';
     }
 
     public function post(string $key, mixed $default = null): mixed

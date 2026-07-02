@@ -8,7 +8,8 @@ use App\Controllers\Controller;
 use App\Core\Container;
 use App\Core\Request\Request;
 use App\Core\Response\Response;
-use App\View\View;
+use App\Exceptions\Http\NotFoundException;
+use ReflectionMethod;
 use RuntimeException;
 
 final class Router
@@ -61,7 +62,7 @@ final class Router
             return $this->invokeHandler($route->handler, $parameters);
         }
 
-        return $this->notFound();
+        throw new NotFoundException();
     }
 
     private function compilePattern(string $pattern): array
@@ -105,18 +106,25 @@ final class Router
             throw new RuntimeException("Action [{$action}] not found in [{$controllerClass}].");
         }
 
-        return $controller->{$action}(...array_values($parameters));
-    }
+        $method = new ReflectionMethod($controller, $action);
+        $arguments = [];
 
-    private function notFound(): Response
-    {
-        $response = $this->container->get(Response::class);
-        $view = $this->container->get(View::class);
+        foreach ($method->getParameters() as $parameter) {
+            $name = $parameter->getName();
 
-        $content = $view->render('pages/errors/404', [
-            'title' => 'Страница не найдена',
-        ]);
+            if (array_key_exists($name, $parameters)) {
+                $arguments[] = $parameters[$name];
+                continue;
+            }
 
-        return html_response($response, $content, 404);
+            if ($parameter->isDefaultValueAvailable()) {
+                $arguments[] = $parameter->getDefaultValue();
+                continue;
+            }
+
+            throw new RuntimeException("Missing route parameter [{$name}] for [{$controllerClass}::{$action}].");
+        }
+
+        return $method->invokeArgs($controller, $arguments);
     }
 }

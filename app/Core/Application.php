@@ -4,18 +4,10 @@ declare(strict_types=1);
 
 namespace App\Core;
 
-use App\Contracts\Repositories\ArticleRepositoryInterface;
-use App\Contracts\Repositories\CategoryRepositoryInterface;
-use App\Database\ConnectionFactory;
-use App\Database\Database;
-use App\Database\DatabaseConfig;
-use App\Repositories\ArticleRepository;
-use App\Repositories\CategoryRepository;
-use App\Repositories\Hydrators\RowHydrator;
-use App\View\View;
-use Request\Request;
-use Response\Response;
-use Router\Router;
+use App\Http\Kernel;
+use App\Providers\AppServiceProvider;
+use App\Core\Request\Request;
+use App\Core\Router\Router;
 
 final class Application
 {
@@ -24,37 +16,27 @@ final class Application
     public function __construct()
     {
         $this->container = new Container();
-        $this->registerBindings();
+        $this->bootstrap();
     }
 
     public function run(): void
     {
         $request = $this->container->get(Request::class);
-        $router = $this->container->get(Router::class);
+        $kernel = $this->container->get(Kernel::class);
 
         $routes = require base_path('config/routes.php');
-        $routes($router);
+        $routes($this->container->get('router'));
 
-        $response = $router->dispatch($request);
+        $response = $kernel->handle($request);
         $response->send();
     }
 
-    private function registerBindings(): void
+    private function bootstrap(): void
     {
         load_environment();
         ensure_storage_directories();
 
-        $this->container->singleton(Container::class, fn (): Container => $this->container);
-        $this->container->singleton(Request::class, fn (): Request => Request::capture());
-        $this->container->singleton(Response::class, fn (): Response => new Response());
-        $this->container->singleton(DatabaseConfig::class, fn (): DatabaseConfig => DatabaseConfig::fromConfig());
-        $this->container->singleton(ConnectionFactory::class, fn (Container $c): ConnectionFactory => new ConnectionFactory($c->get(DatabaseConfig::class)));
-        $this->container->singleton(Database::class, fn (Container $c): Database => new Database($c->get(ConnectionFactory::class)->createWithDatabase()));
-        $this->container->singleton(RowHydrator::class, fn (): RowHydrator => new RowHydrator());
-        $this->container->singleton(ArticleRepositoryInterface::class, fn (Container $c): ArticleRepositoryInterface => $c->make(ArticleRepository::class));
-        $this->container->singleton(CategoryRepositoryInterface::class, fn (Container $c): CategoryRepositoryInterface => $c->make(CategoryRepository::class));
-        $this->container->singleton(View::class, fn (): View => View::create());
-        $this->container->singleton(Router::class, fn (): Router => new Router($this->container));
+        (new AppServiceProvider())->register($this->container);
     }
 
     public function container(): Container

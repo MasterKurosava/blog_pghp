@@ -16,6 +16,13 @@ final class Container
 
     private array $instances = [];
 
+    private array $aliases = [];
+
+    public function alias(string $abstract, string $concrete): void
+    {
+        $this->aliases[$abstract] = $concrete;
+    }
+
     public function singleton(string $abstract, Closure $factory): void
     {
         $this->bindings[$abstract] = $factory;
@@ -23,6 +30,7 @@ final class Container
 
     public function get(string $abstract): object
     {
+        $abstract = $this->aliases[$abstract] ?? $abstract;
         if (isset($this->instances[$abstract])) {
             return $this->instances[$abstract];
         }
@@ -40,6 +48,8 @@ final class Container
 
     public function make(string $class): object
     {
+        $class = $this->aliases[$class] ?? $class;
+
         return $this->resolve($class);
     }
 

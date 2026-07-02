@@ -19,9 +19,7 @@ abstract class Controller
 
     protected function render(string $template, array $data = [], ?string $layout = 'layouts/main'): Response
     {
-        $content = $this->view->render($template, $data, $layout);
-
-        return html_response($this->response, $content);
+        return $this->response->view($template, $data, 200, $layout);
     }
 
     protected function redirect(string $url, int $status = 302): Response

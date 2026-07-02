@@ -4,11 +4,19 @@ declare(strict_types=1);
 
 namespace App\Core\Response;
 
+use App\Exceptions\Http\HttpException;
+use App\View\View;
+
 final class Response
 {
     private string $content = '';
     private int $status = 200;
     private array $headers = [];
+
+    public function __construct(
+        private readonly ?View $view = null,
+    ) {
+    }
 
     public function setContent(string $content): self
     {
@@ -29,11 +37,30 @@ final class Response
         return $this;
     }
 
+    public function statusCode(): int
+    {
+        return $this->status;
+    }
+
     public function header(string $name, string $value): self
     {
         $this->headers[$name] = $value;
 
         return $this;
+    }
+
+    public function view(string $template, array $data = [], int $status = 200, ?string $layout = 'layouts/main'): self
+    {
+        if ($this->view === null) {
+            throw new HttpException(500, 'View is not configured for response.');
+        }
+
+        $content = $this->view->render($template, $data, $layout);
+
+        return $this
+            ->status($status)
+            ->header('Content-Type', 'text/html; charset=utf-8')
+            ->setContent($content);
     }
 
     public function json(array $data, int $status = 200): self
@@ -52,6 +79,11 @@ final class Response
         $this->content = '';
 
         return $this;
+    }
+
+    public function abort(int $status, string $message = ''): never
+    {
+        throw new HttpException($status, $message);
     }
 
     public function send(): void
