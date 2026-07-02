@@ -28,18 +28,9 @@ final class View
             $smarty->error_reporting = E_ALL;
         }
 
-        $smarty->assign('app', [
-            'name' => config('app.name'),
-            'url' => config('app.url'),
-        ]);
+        $smarty->assign('app', view_shared_data());
 
-        $smarty->registerPlugin('function', 'asset', static function (array $params): string {
-            return asset((string) ($params['path'] ?? ''));
-        });
-
-        $smarty->registerPlugin('function', 'url', static function (array $params): string {
-            return url((string) ($params['path'] ?? ''));
-        });
+        register_smarty_plugins($smarty);
 
         return new self($smarty);
     }

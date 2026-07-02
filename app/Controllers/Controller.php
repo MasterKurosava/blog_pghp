@@ -21,10 +21,7 @@ abstract class Controller
     {
         $content = $this->view->render($template, $data, $layout);
 
-        return $this->response
-            ->status(200)
-            ->header('Content-Type', 'text/html; charset=utf-8')
-            ->setContent($content);
+        return html_response($this->response, $content);
     }
 
     protected function redirect(string $url, int $status = 302): Response

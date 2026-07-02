@@ -9,6 +9,7 @@ use App\Core\Container;
 use App\Core\Request\Request;
 use App\Core\Response\Response;
 use App\View\View;
+use RuntimeException;
 
 final class Router
 {
@@ -97,11 +98,11 @@ final class Router
         $controller = $this->container->make($controllerClass);
 
         if (!$controller instanceof Controller) {
-            throw new \RuntimeException("Controller [{$controllerClass}] must extend " . Controller::class);
+            throw new RuntimeException("Controller [{$controllerClass}] must extend " . Controller::class);
         }
 
         if (!method_exists($controller, $action)) {
-            throw new \RuntimeException("Action [{$action}] not found in [{$controllerClass}].");
+            throw new RuntimeException("Action [{$action}] not found in [{$controllerClass}].");
         }
 
         return $controller->{$action}(...array_values($parameters));
@@ -116,9 +117,6 @@ final class Router
             'title' => 'Страница не найдена',
         ]);
 
-        return $response
-            ->status(404)
-            ->header('Content-Type', 'text/html; charset=utf-8')
-            ->setContent($content);
+        return html_response($response, $content, 404);
     }
 }

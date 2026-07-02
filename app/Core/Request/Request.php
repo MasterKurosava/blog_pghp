@@ -18,7 +18,7 @@ final class Request
 
     public static function capture(): self
     {
-        $uri = self::resolveUri($_SERVER['REQUEST_URI'] ?? '/');
+        $uri = normalize_uri($_SERVER['REQUEST_URI'] ?? '/');
         $method = strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
 
         return new self(
@@ -29,19 +29,6 @@ final class Request
             uri: $uri,
             method: $method,
         );
-    }
-
-    private static function resolveUri(string $requestUri): string
-    {
-        $uri = parse_url($requestUri, PHP_URL_PATH);
-
-        if (!is_string($uri) || $uri === '') {
-            return '/';
-        }
-
-        $uri = '/' . trim($uri, '/');
-
-        return $uri === '/' ? '/' : rtrim($uri, '/');
     }
 
     public function method(): string

@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace App\Core;
 
-use App\Core\Request\Request;
-use App\Core\Response\Response;
-use App\Core\Router\Router;
 use App\View\View;
 use Dotenv\Dotenv;
+use Request\Request;
+use Response\Response;
+use Router\Router;
 
 final class Application
 {
@@ -35,6 +35,7 @@ final class Application
     private function registerBindings(): void
     {
         $this->loadEnvironment();
+        ensure_storage_directories();
 
         $this->container->singleton(Container::class, fn (): Container => $this->container);
         $this->container->singleton(Request::class, fn (): Request => Request::capture());

@@ -2,6 +2,8 @@
 
 declare(strict_types=1);
 
+use App\Core\Response\Response;
+
 if (!function_exists('env')) {
     function env(string $key, mixed $default = null): mixed
     {
@@ -21,6 +23,13 @@ if (!function_exists('env')) {
     }
 }
 
+if (!function_exists('config_path')) {
+    function config_path(string $name): string
+    {
+        return base_path('config/' . $name . '.php');
+    }
+}
+
 if (!function_exists('config')) {
     function config(string $key, mixed $default = null): mixed
     {
@@ -33,7 +42,7 @@ if (!function_exists('config')) {
         }
 
         if (!isset($config[$file])) {
-            $path = dirname(__DIR__, 2) . '/config/' . $file . '.php';
+            $path = config_path($file);
 
             if (!is_file($path)) {
                 return $default;
@@ -69,6 +78,38 @@ if (!function_exists('storage_path')) {
     }
 }
 
+if (!function_exists('ensure_storage_directories')) {
+    function ensure_storage_directories(): void
+    {
+        $directories = [
+            storage_path('cache/templates/compile'),
+            storage_path('cache/templates/cache'),
+            storage_path('logs'),
+        ];
+
+        foreach ($directories as $directory) {
+            if (!is_dir($directory)) {
+                mkdir($directory, 0775, true);
+            }
+        }
+    }
+}
+
+if (!function_exists('normalize_uri')) {
+    function normalize_uri(string $requestUri): string
+    {
+        $uri = parse_url($requestUri, PHP_URL_PATH);
+
+        if (!is_string($uri) || $uri === '') {
+            return '/';
+        }
+
+        $uri = '/' . trim($uri, '/');
+
+        return $uri === '/' ? '/' : rtrim($uri, '/');
+    }
+}
+
 if (!function_exists('url')) {
     function url(string $path = ''): string
     {
@@ -83,6 +124,39 @@ if (!function_exists('asset')) {
     function asset(string $path): string
     {
         return url('assets/' . ltrim($path, '/'));
+    }
+}
+
+if (!function_exists('view_shared_data')) {
+    function view_shared_data(): array
+    {
+        return [
+            'name' => config('app.name'),
+            'url' => config('app.url'),
+        ];
+    }
+}
+
+if (!function_exists('register_smarty_plugins')) {
+    function register_smarty_plugins(Smarty $smarty): void
+    {
+        $smarty->registerPlugin('function', 'asset', static function (array $params): string {
+            return asset((string) ($params['path'] ?? ''));
+        });
+
+        $smarty->registerPlugin('function', 'url', static function (array $params): string {
+            return url((string) ($params['path'] ?? ''));
+        });
+    }
+}
+
+if (!function_exists('html_response')) {
+    function html_response(Response $response, string $content, int $status = 200): Response
+    {
+        return $response
+            ->status($status)
+            ->header('Content-Type', 'text/html; charset=utf-8')
+            ->setContent($content);
     }
 }
 

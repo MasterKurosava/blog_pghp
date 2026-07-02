@@ -8,6 +8,7 @@ use Closure;
 use ReflectionClass;
 use ReflectionException;
 use ReflectionNamedType;
+use RuntimeException;
 
 final class Container
 {
@@ -47,11 +48,11 @@ final class Container
         try {
             $reflection = new ReflectionClass($class);
         } catch (ReflectionException) {
-            throw new \RuntimeException("Class [{$class}] not found.");
+            throw new RuntimeException("Class [{$class}] not found.");
         }
 
         if (!$reflection->isInstantiable()) {
-            throw new \RuntimeException("Class [{$class}] is not instantiable.");
+            throw new RuntimeException("Class [{$class}] is not instantiable.");
         }
 
         $constructor = $reflection->getConstructor();
@@ -71,7 +72,7 @@ final class Container
                     continue;
                 }
 
-                throw new \RuntimeException(
+                throw new RuntimeException(
                     "Unable to resolve parameter [{$parameter->getName()}] for class [{$class}]."
                 );
             }
