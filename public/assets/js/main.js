@@ -7,7 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initSearch(app);
     initShareModal(app);
     initBackToTop();
-    initInfiniteScroll(app);
+    initAjaxPagination(app);
     initPageTransitions();
 });
 
@@ -278,133 +278,57 @@ function initBackToTop() {
     });
 }
 
-function initInfiniteScroll(app) {
+function initAjaxPagination(app) {
     const page = document.querySelector('.category-page');
     if (!page) return;
 
     const apiBase = page.dataset.categoryApi;
     const sort = page.dataset.currentSort || 'newest';
+    const gridWrap = page.querySelector('.js-category-grid-wrap');
     const grid = page.querySelector('.js-category-grid');
-    const infiniteRoot = page.querySelector('.js-infinite-scroll');
-    const sentinel = page.querySelector('.js-infinite-sentinel');
-    const loader = page.querySelector('.js-infinite-loader');
-    const endMessage = page.querySelector('.js-infinite-end');
+    const paginationWrap = page.querySelector('.js-category-pagination');
 
-    if (!apiBase || !grid || !infiniteRoot || !sentinel) return;
+    if (!apiBase || !gridWrap || !grid || !paginationWrap) return;
 
-    let currentPage = Number(page.dataset.currentPage || 1);
-    let lastPage = Number(page.dataset.lastPage || 1);
-    let isLoading = false;
-
-    const hasMore = () => currentPage < lastPage;
-
-    const setLoaderVisible = (visible) => {
-        if (!loader) return;
-        loader.hidden = !visible;
-    };
-
-    const showEnd = () => {
-        if (endMessage) endMessage.hidden = false;
-        if (infiniteRoot) infiniteRoot.hidden = false;
-        sentinel.style.display = 'none';
-        setLoaderVisible(false);
-    };
-
-    const hideInfinite = () => {
-        if (infiniteRoot) infiniteRoot.hidden = true;
-    };
-
-    if (!hasMore()) {
-        if (lastPage > 1) {
-            showEnd();
-        } else {
-            hideInfinite();
+    paginationWrap.addEventListener('click', async (event) => {
+        const link = event.target.closest('.pagination__link, .pagination__nav');
+        if (!link || link.classList.contains('pagination__nav--disabled') || link.classList.contains('pagination__link--active')) {
+            return;
         }
-        return;
-    }
 
-    const revealObserver = 'IntersectionObserver' in window
-        ? new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (!entry.isIntersecting) return;
-                entry.target.classList.add('is-visible');
-                revealObserver.unobserve(entry.target);
-            });
-        }, { threshold: 0.08, rootMargin: '0px 0px -32px 0px' })
-        : null;
+        const href = link.getAttribute('href');
+        if (!href || href === '#') return;
 
-    const animateNewItems = (fromIndex) => {
-        const items = Array.from(grid.children).slice(fromIndex);
-        items.forEach((item) => {
-            item.classList.add('section--animate');
-            if (revealObserver) {
-                revealObserver.observe(item);
-            } else {
-                item.classList.add('is-visible');
-            }
-        });
-    };
+        event.preventDefault();
+        const url = new URL(href, window.location.origin);
+        const pageNumber = Number(url.searchParams.get('page') || 1);
 
-    const loadMore = async () => {
-        if (isLoading || !hasMore()) return;
-
-        isLoading = true;
-        setLoaderVisible(true);
-
-        const nextPage = currentPage + 1;
-        const beforeCount = grid.children.length;
+        gridWrap.insertAdjacentHTML('beforeend', '<div class="grid-skeleton-overlay" aria-hidden="true"></div>');
+        const overlay = gridWrap.querySelector('.grid-skeleton-overlay');
+        overlay.innerHTML = document.querySelector('.skeleton-group')?.outerHTML || '';
 
         try {
-            const response = await fetch(`${apiBase}?page=${nextPage}&sort=${encodeURIComponent(sort)}`);
-            if (!response.ok) throw new Error('load failed');
+            const response = await fetch(`${apiBase}?page=${pageNumber}&sort=${encodeURIComponent(sort)}`);
+            if (!response.ok) throw new Error('pagination failed');
 
             const data = await response.json();
-            if (data.html) {
-                grid.insertAdjacentHTML('beforeend', data.html);
-                animateNewItems(beforeCount);
-                initImagePlaceholders();
+            grid.innerHTML = data.html || '';
+
+            if (data.paginationHtml) {
+                paginationWrap.innerHTML = data.paginationHtml;
+            } else if (!data.pagination?.visible) {
+                paginationWrap.innerHTML = '';
             }
 
-            currentPage = Number(data.page || nextPage);
-            lastPage = Number(data.lastPage || lastPage);
-            page.dataset.currentPage = String(currentPage);
-            page.dataset.lastPage = String(lastPage);
-
-            const url = new URL(window.location.href);
-            url.searchParams.set('page', String(currentPage));
-            window.history.replaceState({}, '', url.toString());
-
-            if (!data.hasMore) {
-                showEnd();
-            }
+            window.history.pushState({}, '', href);
+            initImagePlaceholders();
+            gridWrap.scrollIntoView({ behavior: 'smooth', block: 'start' });
         } catch {
             showToast(app.toastSearchError, 'error', app.toastDuration);
         } finally {
-            isLoading = false;
-            if (hasMore()) {
-                setLoaderVisible(false);
-            }
+            overlay?.remove();
         }
-    };
-
-    if ('IntersectionObserver' in window) {
-        const scrollObserver = new IntersectionObserver((entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    loadMore();
-                }
-            });
-        }, { rootMargin: '200px 0px', threshold: 0 });
-
-        scrollObserver.observe(sentinel);
-    } else {
-        window.addEventListener('scroll', () => {
-            const rect = sentinel.getBoundingClientRect();
-            if (rect.top <= window.innerHeight + 200) {
-                loadMore();
-            }
-        }, { passive: true });
-    }
+    });
 }
 
 function initPageTransitions() {

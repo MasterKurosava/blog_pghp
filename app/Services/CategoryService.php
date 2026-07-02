@@ -74,16 +74,11 @@ final class CategoryService
     public function getArticlesApiData(string $slug, int $page, string $sort): array
     {
         $data = $this->getShowPageData($slug, $page, $sort);
-        $pagination = $data['pagination'];
-        $lastPage = (int) ($pagination['last'] ?? 1);
-        $currentPage = (int) ($pagination['current'] ?? $page);
 
         return [
             'articles' => $data['articles'],
-            'pagination' => $pagination,
-            'page' => $currentPage,
-            'lastPage' => $lastPage,
-            'hasMore' => ($pagination['visible'] ?? false) && $currentPage < $lastPage,
+            'pagination' => $data['pagination'],
+            'page' => $page,
         ];
     }
 

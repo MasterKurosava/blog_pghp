@@ -42,14 +42,19 @@ final class ApiController extends Controller
         $sort = (string) $this->request->query('sort', (string) config('category.default_sort', 'newest'));
 
         $data = $this->categories->getArticlesApiData($slug, $page, $sort);
+        $pagination = $data['pagination'];
 
         return $this->json([
             'html' => $this->view->render('partials/articles-grid', [
                 'articles' => $data['articles'],
             ], null),
+            'pagination' => $pagination,
+            'paginationHtml' => ($pagination['visible'] ?? false)
+                ? $this->view->render('components/navigation/pagination', [
+                    'pagination' => $pagination,
+                ], null)
+                : '',
             'page' => $data['page'],
-            'lastPage' => $data['lastPage'],
-            'hasMore' => $data['hasMore'],
         ]);
     }
 }

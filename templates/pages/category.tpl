@@ -8,10 +8,6 @@
     data-category-api="{url path='/api/category/'|cat:$category.slug|cat:'/articles'}"
     data-category-slug="{$category.slug|escape}"
     data-current-sort="{$currentSort|default:'newest'|escape}"
-    data-current-page="{$pagination.current|default:1}"
-    data-last-page="{$pagination.last|default:1}"
-    data-infinite-loading="{str key='category.loading_more'|escape:'html'}"
-    data-infinite-end="{str key='category.all_loaded'|escape:'html'}"
 >
     {include file="components/navigation/breadcrumb.tpl" items=$breadcrumbs}
 
@@ -54,13 +50,8 @@
             {include file="components/layout/grid.tpl" cols=3 role='list' content=$_articlesGrid class='category-page__grid js-category-grid'}
         </div>
 
-        <div class="infinite-scroll js-infinite-scroll"{if $pagination.last|default:1 <= 1} hidden{/if}>
-            <div class="infinite-scroll__sentinel js-infinite-sentinel" aria-hidden="true"></div>
-            <div class="infinite-scroll__loader js-infinite-loader" hidden aria-live="polite">
-                {include file="components/feedback/skeleton-group.tpl" count=3}
-                <p class="infinite-scroll__status">{str key='category.loading_more'}</p>
-            </div>
-            <p class="infinite-scroll__end js-infinite-end" hidden>{str key='category.all_loaded'}</p>
+        <div class="category-page__pagination js-category-pagination">
+            {include file="components/navigation/pagination.tpl" pagination=$pagination}
         </div>
     {else}
         {include file="components/feedback/empty-state.tpl"
