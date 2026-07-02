@@ -1,0 +1,28 @@
+.tag {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+    padding: 0.125rem var(--space-2);
+    font-size: var(--font-size-xs);
+    font-weight: var(--font-weight-medium);
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+    background-color: var(--color-bg);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-sm);
+    transition:
+        border-color var(--transition-fast),
+        color var(--transition-fast),
+        background-color var(--transition-fast);
+
+    &:hover {
+        border-color: var(--color-border-hover);
+        color: var(--color-text);
+    }
+
+    &--accent {
+        color: var(--color-accent);
+        border-color: var(--color-accent-muted);
+        background-color: var(--color-accent-soft);
+    }
+}

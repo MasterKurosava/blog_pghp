@@ -1,0 +1,10 @@
+.page-subtitle {
+    max-width: 40rem;
+    font-size: var(--font-size-base);
+    line-height: var(--line-height-relaxed);
+    color: var(--color-text-muted);
+
+    &--lg {
+        font-size: var(--font-size-lg);
+    }
+}

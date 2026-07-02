@@ -1,0 +1,34 @@
+.icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 1em;
+    height: 1em;
+    color: inherit;
+
+    svg {
+        width: 100%;
+        height: 100%;
+        fill: var(--icon-fill, none);
+        stroke: var(--icon-stroke, currentColor);
+        stroke-width: var(--icon-stroke-width, 1.75);
+        stroke-linecap: round;
+        stroke-linejoin: round;
+    }
+
+    &--sm {
+        width: 0.875rem;
+        height: 0.875rem;
+    }
+
+    &--md {
+        width: 1.125rem;
+        height: 1.125rem;
+    }
+
+    &--lg {
+        width: 1.5rem;
+        height: 1.5rem;
+    }
+}

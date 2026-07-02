@@ -1,0 +1,13 @@
+@use '../tokens/colors';
+@use '../tokens/typography';
+@use '../tokens/spacing';
+@use '../tokens/effects';
+@use '../tokens/layout';
+
+:root {
+    @include colors.tokens;
+    @include typography.tokens;
+    @include spacing.tokens;
+    @include effects.tokens;
+    @include layout.tokens;
+}

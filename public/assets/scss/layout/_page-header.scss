@@ -1,0 +1,29 @@
+@use '../tools/mixins' as *;
+
+.page-header {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-5);
+
+    @include respond-to(md) {
+        &--row {
+            flex-direction: row;
+            align-items: flex-start;
+            justify-content: space-between;
+        }
+    }
+}
+
+.page-header__content {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+    flex: 1;
+}
+
+.page-header__actions {
+    display: flex;
+    flex-shrink: 0;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+}

@@ -1,0 +1,27 @@
+@use '../../tools/mixins' as *;
+
+.card {
+    @include card-surface;
+    overflow: hidden;
+
+    &--elevated {
+        box-shadow: var(--shadow-md);
+
+        &:hover {
+            box-shadow: var(--shadow-hover);
+        }
+    }
+
+    &--interactive {
+        @include elevation-hover;
+    }
+
+    &__body {
+        padding: var(--space-5);
+    }
+
+    &__footer {
+        padding: var(--space-4) var(--space-5);
+        border-top: 1px solid var(--color-border);
+    }
+}

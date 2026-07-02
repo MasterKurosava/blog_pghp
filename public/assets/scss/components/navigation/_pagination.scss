@@ -1,0 +1,98 @@
+.pagination {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-2);
+    padding-block: var(--space-8);
+}
+
+.pagination__list {
+    display: flex;
+    align-items: center;
+    gap: var(--space-1);
+    list-style: none;
+}
+
+.pagination__item {
+    display: flex;
+}
+
+.pagination__link,
+.pagination__ellipsis {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    padding-inline: var(--space-3);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-muted);
+    border: 1px solid transparent;
+    border-radius: var(--radius-md);
+    transition:
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        color var(--transition-fast),
+        box-shadow var(--transition-fast);
+}
+
+.pagination__link {
+    &:hover {
+        background-color: var(--color-bg-muted);
+        color: var(--color-text);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-border-focus);
+        outline-offset: 2px;
+    }
+
+    &--active {
+        background-color: var(--color-accent);
+        color: var(--color-text-inverse);
+        border-color: var(--color-accent);
+        box-shadow: var(--shadow-xs);
+        pointer-events: none;
+    }
+
+    &--disabled {
+        opacity: 0.4;
+        pointer-events: none;
+    }
+}
+
+.pagination__ellipsis {
+    pointer-events: none;
+}
+
+.pagination__nav {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.5rem;
+    height: 2.5rem;
+    color: var(--color-text-muted);
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius-md);
+    transition:
+        background-color var(--transition-fast),
+        border-color var(--transition-fast),
+        color var(--transition-fast);
+
+    &:hover {
+        background-color: var(--color-bg-muted);
+        border-color: var(--color-border-hover);
+        color: var(--color-text);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-border-focus);
+        outline-offset: 2px;
+    }
+
+    &--disabled {
+        opacity: 0.4;
+        pointer-events: none;
+    }
+}

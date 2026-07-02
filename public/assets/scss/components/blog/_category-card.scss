@@ -1,0 +1,48 @@
+@use '../../tools/mixins' as *;
+
+.card.category-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: var(--space-6);
+    gap: var(--space-4);
+}
+
+.category-card__title {
+    font-size: var(--font-size-xl);
+    line-height: var(--line-height-tight);
+}
+
+.category-card__title-link {
+    color: var(--color-text);
+    transition: color var(--transition-fast);
+
+    &:hover {
+        color: var(--color-accent);
+    }
+}
+
+.category-card__description {
+    flex: 1;
+    font-size: var(--font-size-sm);
+    line-height: var(--line-height-relaxed);
+    @include text-truncate(3);
+}
+
+.category-card__meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    font-size: var(--font-size-sm);
+    color: var(--color-text-light);
+}
+
+.category-card__count {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-1);
+}
+
+.category-card__footer {
+    padding-top: var(--space-2);
+}

@@ -1,0 +1,12 @@
+.card.category-section {
+    padding: clamp(var(--space-6), 4vw, var(--space-10));
+    margin-bottom: var(--space-8);
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+}
+
+.category-section__header {
+    margin-bottom: var(--space-8);
+}

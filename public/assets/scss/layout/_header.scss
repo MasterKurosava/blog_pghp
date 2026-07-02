@@ -1,32 +1,29 @@
-@use '../utils/variables' as *;
-@use '../utils/mixins' as *;
-
 .header {
     position: sticky;
     top: 0;
-    z-index: 100;
-    background-color: rgba($color-white, 0.85);
+    z-index: var(--z-header);
+    background-color: rgba(255, 255, 255, 0.85);
     backdrop-filter: blur(12px);
-    border-bottom: 1px solid $color-border;
+    border-bottom: 1px solid var(--color-border);
 }
 
 .header__inner {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    height: 4.5rem;
+    height: var(--header-height);
 }
 
 .header__logo {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    color: $color-text;
-    font-weight: 600;
-    font-size: 1.125rem;
+    gap: var(--space-3);
+    color: var(--color-text);
+    font-weight: var(--font-weight-semibold);
+    font-size: var(--font-size-lg);
 
     &:hover {
-        color: $color-text;
+        color: var(--color-text);
     }
 }
 
@@ -36,32 +33,26 @@
     justify-content: center;
     width: 2.25rem;
     height: 2.25rem;
-    background-color: $color-accent;
-    color: $color-white;
-    border-radius: $radius-sm;
-    font-size: 1rem;
-    font-weight: 700;
+    background-color: var(--color-accent);
+    color: var(--color-text-inverse);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-base);
+    font-weight: var(--font-weight-bold);
 }
 
 .header__nav {
     display: flex;
     align-items: center;
-    gap: 2rem;
+    gap: var(--space-8);
 }
 
 .header__link {
-    color: $color-text-muted;
-    font-size: 0.875rem;
-    font-weight: 500;
-    transition: color $transition-fast;
+    color: var(--color-text-muted);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    transition: color var(--transition-fast);
 
     &:hover {
-        color: $color-text;
-    }
-}
-
-@include respond-to(md) {
-    .header__nav {
-        gap: 1.5rem;
+        color: var(--color-text);
     }
 }

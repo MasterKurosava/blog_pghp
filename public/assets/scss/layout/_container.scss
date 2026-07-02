@@ -1,15 +1,21 @@
-@use '../utils/variables' as *;
-
 .container {
     width: 100%;
-    max-width: $container-max;
+    max-width: var(--container-max);
     margin-inline: auto;
-    padding-inline: $container-padding;
+    padding-inline: var(--container-padding);
+
+    &--narrow {
+        max-width: var(--container-narrow);
+    }
+
+    &--fluid {
+        max-width: none;
+    }
 }
 
 .main {
     flex: 1;
-    padding-block: 4rem;
+    padding-block: var(--space-16);
 
     &--home {
         padding-block: 0;

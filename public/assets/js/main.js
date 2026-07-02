@@ -1,15 +1,10 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const elements = document.querySelectorAll('.category-block, .home__empty');
+    const elements = document.querySelectorAll('.section--animate');
 
     if (!('IntersectionObserver' in window)) {
-        elements.forEach((el) => el.classList.add('fade-in'));
+        elements.forEach((el) => el.classList.add('is-visible'));
         return;
     }
-
-    elements.forEach((el) => {
-        el.classList.remove('fade-in');
-        el.classList.add('fade-in--hidden');
-    });
 
     const observer = new IntersectionObserver(
         (entries) => {
@@ -18,8 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
 
-                entry.target.classList.remove('fade-in--hidden');
-                entry.target.classList.add('fade-in--visible');
+                entry.target.classList.add('is-visible');
                 observer.unobserve(entry.target);
             });
         },

@@ -1,23 +1,19 @@
 <div class="home">
-    <section class="hero">
-        <div class="hero__decor" aria-hidden="true"></div>
-        <div class="container hero__inner fade-in">
-            <span class="hero__badge">{$hero.badge|escape}</span>
-            <h1 class="hero__title">{$hero.title|escape}</h1>
-            <p class="hero__subtitle">{$hero.subtitle|escape}</p>
-            <a href="{$hero.cta_href|escape}" class="btn btn--primary hero__cta">{$hero.cta|escape}</a>
-        </div>
-    </section>
+    {include file="components/blog/hero.tpl" hero=$hero}
 
-    <div class="container home__body" id="categories">
+    {capture assign="homeBody"}
         {if $categories|@count > 0}
             {foreach $categories as $category}
-                {include file="partials/category-block.tpl" category=$category}
+                {include file="components/blog/category-section.tpl" category=$category}
             {/foreach}
         {else}
-            <section class="home__empty fade-in">
-                <p class="home__empty-text">Материалы скоро появятся.</p>
-            </section>
+            {include file="components/feedback/empty-state.tpl"
+                title='Материалы скоро появятся'
+                description='Мы готовим свежие публикации. Загляните позже.'
+                icon='file'
+            }
         {/if}
-    </div>
+    {/capture}
+
+    {include file="components/layout/container.tpl" class='home__body' content=$homeBody id='categories'}
 </div>

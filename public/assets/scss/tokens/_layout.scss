@@ -1,0 +1,13 @@
+@mixin tokens {
+    --container-max: 72rem;
+    --container-narrow: 42rem;
+    --container-padding: 1.5rem;
+
+    --grid-min-col: 17.5rem;
+
+    --z-header: 100;
+    --z-dropdown: 200;
+    --z-modal: 300;
+
+    --header-height: 4.5rem;
+}

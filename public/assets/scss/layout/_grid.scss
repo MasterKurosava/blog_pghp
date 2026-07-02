@@ -1,0 +1,54 @@
+@use '../tools/mixins' as *;
+
+.grid {
+    display: grid;
+    gap: var(--space-6);
+
+    &--gap-sm {
+        gap: var(--space-4);
+    }
+
+    &--gap-lg {
+        gap: var(--space-8);
+    }
+
+    &--cols-1 {
+        grid-template-columns: 1fr;
+    }
+
+    &--cols-2 {
+        grid-template-columns: 1fr;
+
+        @include respond-to(md) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    &--cols-3 {
+        grid-template-columns: 1fr;
+
+        @include respond-to(md) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @include respond-to(lg) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+
+    &--cols-4 {
+        grid-template-columns: 1fr;
+
+        @include respond-to(sm) {
+            grid-template-columns: repeat(2, 1fr);
+        }
+
+        @include respond-to(lg) {
+            grid-template-columns: repeat(4, 1fr);
+        }
+    }
+
+    &--cols-auto {
+        grid-template-columns: repeat(auto-fit, minmax(var(--grid-min-col), 1fr));
+    }
+}
