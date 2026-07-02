@@ -4,6 +4,19 @@ declare(strict_types=1);
 
 use App\Core\Response\Response;
 
+if (!function_exists('load_environment')) {
+    function load_environment(): void
+    {
+        $envPath = base_path();
+
+        if (is_file($envPath . '/.env')) {
+            Dotenv\Dotenv::createImmutable($envPath)->safeLoad();
+        } elseif (is_file($envPath . '/.env.example')) {
+            Dotenv\Dotenv::createImmutable($envPath, '.env.example')->safeLoad();
+        }
+    }
+}
+
 if (!function_exists('env')) {
     function env(string $key, mixed $default = null): mixed
     {
