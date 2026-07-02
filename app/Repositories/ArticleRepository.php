@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Repositories;
 
 use App\Contracts\Repositories\ArticleRepositoryInterface;
+use App\DTO\CreateArticleData;
 use App\DTO\PaginationResult;
 use App\Models\Article;
 use App\Models\Category;
@@ -225,5 +226,49 @@ final class ArticleRepository extends AbstractRepository implements ArticleRepos
             fn (array $row): Category => $this->hydrator->hydrateCategory($row),
             $rows,
         );
+    }
+
+    public function create(CreateArticleData $data): int
+    {
+        $statement = $this->pdo()->prepare(
+            'INSERT INTO articles (title, slug, description, content, image, views, published_at)
+             VALUES (:title, :slug, :description, :content, :image, :views, :published_at)'
+        );
+        $statement->execute([
+            'title' => $data->title,
+            'slug' => $data->slug,
+            'description' => $data->description,
+            'content' => $data->content,
+            'image' => $data->image,
+            'views' => $data->views,
+            'published_at' => $data->publishedAt,
+        ]);
+
+        return (int) $this->pdo()->lastInsertId();
+    }
+
+    public function attachCategories(int $articleId, array $categoryIds): void
+    {
+        if ($categoryIds === []) {
+            return;
+        }
+
+        $statement = $this->pdo()->prepare(
+            'INSERT INTO article_category (article_id, category_id)
+             VALUES (:article_id, :category_id)'
+        );
+
+        foreach ($categoryIds as $categoryId) {
+            $statement->execute([
+                'article_id' => $articleId,
+                'category_id' => $categoryId,
+            ]);
+        }
+    }
+
+    public function clearAll(): void
+    {
+        $this->pdo()->exec('DELETE FROM article_category');
+        $this->pdo()->exec('DELETE FROM articles');
     }
 }

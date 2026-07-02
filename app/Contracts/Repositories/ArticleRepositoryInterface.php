@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Contracts\Repositories;
 
+use App\DTO\CreateArticleData;
 use App\DTO\PaginationResult;
 use App\Models\Article;
 use App\Models\Category;
@@ -27,4 +28,10 @@ interface ArticleRepositoryInterface
     public function findPaginated(int $page, int $perPage, ?int $categoryId = null): PaginationResult;
 
     public function findCategoriesByArticleId(int $articleId): array;
+
+    public function create(CreateArticleData $data): int;
+
+    public function attachCategories(int $articleId, array $categoryIds): void;
+
+    public function clearAll(): void;
 }

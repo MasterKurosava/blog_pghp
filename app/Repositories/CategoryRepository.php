@@ -6,6 +6,7 @@ namespace App\Repositories;
 
 use App\Contracts\Repositories\CategoryRepositoryInterface;
 use App\DTO\CategoryWithArticles;
+use App\DTO\CreateCategoryData;
 use App\Models\Category;
 
 final class CategoryRepository extends AbstractRepository implements CategoryRepositoryInterface
@@ -141,5 +142,25 @@ final class CategoryRepository extends AbstractRepository implements CategoryRep
             fn (array $row): Category => $this->hydrator->hydrateCategory($row),
             $rows,
         );
+    }
+
+    public function create(CreateCategoryData $data): int
+    {
+        $statement = $this->pdo()->prepare(
+            'INSERT INTO categories (title, description, slug)
+             VALUES (:title, :description, :slug)'
+        );
+        $statement->execute([
+            'title' => $data->title,
+            'description' => $data->description,
+            'slug' => $data->slug,
+        ]);
+
+        return (int) $this->pdo()->lastInsertId();
+    }
+
+    public function clearAll(): void
+    {
+        $this->pdo()->exec('DELETE FROM categories');
     }
 }

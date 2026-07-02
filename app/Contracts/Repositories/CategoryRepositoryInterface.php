@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Contracts\Repositories;
 
+use App\DTO\CreateCategoryData;
 use App\Models\Category;
 
 interface CategoryRepositoryInterface
@@ -17,4 +18,8 @@ interface CategoryRepositoryInterface
     public function findWithArticles(): array;
 
     public function findOnlyNonEmpty(): array;
+
+    public function create(CreateCategoryData $data): int;
+
+    public function clearAll(): void;
 }

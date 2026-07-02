@@ -19,10 +19,16 @@ use App\Http\Middleware\MiddlewarePipeline;
 use App\Repositories\ArticleRepository;
 use App\Repositories\CategoryRepository;
 use App\Repositories\Hydrators\RowHydrator;
+use App\Database\Factories\ArticleFactory;
+use App\Database\Factories\CategoryFactory;
+use App\Database\Seeders\DatabaseSeeder;
 use App\Services\ArticleService;
 use App\Services\CategoryService;
 use App\Services\HomeService;
+use App\Support\SlugGenerator;
 use App\View\View;
+use Faker\Factory as FakerFactory;
+use Faker\Generator;
 
 final class AppServiceProvider
 {
@@ -39,6 +45,12 @@ final class AppServiceProvider
         $container->singleton(RowHydrator::class, fn (): RowHydrator => new RowHydrator());
         $container->singleton(ArticleRepositoryInterface::class, fn (Container $c): ArticleRepositoryInterface => $c->make(ArticleRepository::class));
         $container->singleton(CategoryRepositoryInterface::class, fn (Container $c): CategoryRepositoryInterface => $c->make(CategoryRepository::class));
+
+        $container->singleton(Generator::class, fn (): Generator => FakerFactory::create('ru_RU'));
+        $container->singleton(SlugGenerator::class, fn (): SlugGenerator => new SlugGenerator());
+        $container->singleton(CategoryFactory::class, fn (Container $c): CategoryFactory => $c->make(CategoryFactory::class));
+        $container->singleton(ArticleFactory::class, fn (Container $c): ArticleFactory => $c->make(ArticleFactory::class));
+        $container->singleton(DatabaseSeeder::class, fn (Container $c): DatabaseSeeder => $c->make(DatabaseSeeder::class));
 
         $container->singleton(HomeService::class, fn (Container $c): HomeService => $c->make(HomeService::class));
         $container->singleton(CategoryService::class, fn (Container $c): CategoryService => $c->make(CategoryService::class));
