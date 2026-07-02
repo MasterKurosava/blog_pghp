@@ -332,6 +332,8 @@ if (!function_exists('view_shared_data')) {
         return [
             'name' => config('app.name'),
             'url' => config('app.url'),
+            'defaultMetaDescription' => 'Современный блог о технологиях, дизайне и разработке.',
+            'homeUrl' => url('/'),
         ];
     }
 }

@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 return [
     'meta_title' => 'Главная',
+    'meta_description' => 'Глубокая аналитика, практические гайды и свежие тренды из мира разработки, дизайна и бизнеса.',
     'articles_per_category' => 3,
     'hero' => [
         'badge' => 'IT-Медиа',

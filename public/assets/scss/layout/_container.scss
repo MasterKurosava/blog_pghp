@@ -20,4 +20,11 @@
     &--home {
         padding-block: 0;
     }
+
+    &--error {
+        display: flex;
+        align-items: center;
+        min-height: 50vh;
+        padding-block: var(--space-12);
+    }
 }

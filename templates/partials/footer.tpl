@@ -1,4 +1,4 @@
-<footer class="footer">
+<footer class="footer" role="contentinfo">
     <div class="container footer__inner">
         <p class="footer__copy">
             &copy; {$smarty.now|date_format:"%Y"} {$app.name|escape}. Все права защищены.

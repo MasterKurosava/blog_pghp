@@ -3,8 +3,11 @@
 {assign var="_buttonUrl" value=$buttonUrl|default:$actionHref|default:''}
 
 <div class="empty-state{if $class} {$class|escape}{/if}" role="status" aria-live="polite">
-    <div class="empty-state__icon" aria-hidden="true">
-        {include file="components/ui/icon.tpl" name=$icon|default:'file' size="lg" ariaHidden=true}
+    <div class="empty-state__visual">
+        <span class="empty-state__ring" aria-hidden="true"></span>
+        <div class="empty-state__icon" aria-hidden="true">
+            {include file="components/ui/icon.tpl" name=$icon|default:'file' size="lg" ariaHidden=true}
+        </div>
     </div>
 
     <h2 class="empty-state__title">{$title|default:'Статей пока нет'|escape}</h2>

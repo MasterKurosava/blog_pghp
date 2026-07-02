@@ -1,3 +1,17 @@
 .home__body {
-    padding-block: clamp(3rem, 6vw, 5rem);
+    padding-block: clamp(var(--space-12), 6vw, var(--space-20));
+}
+
+.home__empty {
+    position: relative;
+    isolation: isolate;
+}
+
+.home__empty-skeleton {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    opacity: 0.4;
+    pointer-events: none;
+    mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.6), transparent 85%);
 }

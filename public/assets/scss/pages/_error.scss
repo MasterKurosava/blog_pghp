@@ -1,40 +1,35 @@
 .error-page {
-    max-width: 28rem;
+    position: relative;
+    max-width: 36rem;
     margin-inline: auto;
-    text-align: center;
-    padding-block: var(--space-16);
+    padding-block: var(--space-12);
+}
+
+.error-page__decor {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 20% 30%, rgba(79, 70, 229, 0.06), transparent 45%),
+        radial-gradient(circle at 80% 70%, rgba(79, 70, 229, 0.04), transparent 40%);
 }
 
 .error-page__code {
-    font-size: 5rem;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    z-index: 0;
+    font-size: clamp(6rem, 20vw, 10rem);
     font-weight: var(--font-weight-bold);
-    color: var(--color-accent);
     line-height: 1;
-    margin-bottom: var(--space-6);
-    letter-spacing: -0.04em;
+    color: var(--color-accent-soft);
+    letter-spacing: -0.06em;
+    transform: translate(-50%, -55%);
+    user-select: none;
+    pointer-events: none;
 }
 
-.error-page__title {
-    font-size: var(--font-size-3xl);
-    margin-bottom: var(--space-4);
-}
-
-.error-page__text {
-    margin-bottom: var(--space-8);
-}
-
-.error-page__link {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.75rem 1.5rem;
-    background-color: var(--color-accent);
-    color: var(--color-text-inverse);
-    font-weight: var(--font-weight-medium);
-    border-radius: var(--radius-sm);
-    transition: background-color var(--transition-fast);
-
-    &:hover {
-        background-color: var(--color-accent-hover);
-        color: var(--color-text-inverse);
-    }
+.error-page__content {
+    position: relative;
+    z-index: 1;
 }

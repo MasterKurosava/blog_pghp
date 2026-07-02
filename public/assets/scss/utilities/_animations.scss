@@ -1,4 +1,14 @@
-@keyframes fade-in {
+@keyframes skeleton-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+@keyframes fade-in-up {
     from {
         opacity: 0;
         transform: translateY(0.75rem);
@@ -11,7 +21,9 @@
 }
 
 .fade-in {
-    animation: fade-in 0.5s ease forwards;
+    @media (prefers-reduced-motion: no-preference) {
+        animation: fade-in-up var(--duration-fade) var(--ease-out) forwards;
+    }
 }
 
 .u-transition {
@@ -19,19 +31,15 @@
         opacity var(--transition-base),
         transform var(--transition-base),
         box-shadow var(--transition-base),
-        border-color var(--transition-base);
-}
-
-.u-scale-hover {
-    transition: transform var(--transition-base);
-
-    &:hover {
-        transform: scale(1.02);
-    }
+        border-color var(--transition-base),
+        color var(--transition-fast);
 }
 
 .u-elevation-hover {
-    transition: box-shadow var(--transition-base);
+    transition:
+        transform var(--duration-hover) var(--ease-out),
+        box-shadow var(--duration-hover) var(--ease-out),
+        border-color var(--transition-base);
 
     &:hover {
         box-shadow: var(--shadow-hover);
@@ -48,4 +56,34 @@
     clip: rect(0, 0, 0, 0);
     white-space: nowrap;
     border: 0;
+}
+
+.skip-link {
+    position: absolute;
+    top: var(--space-2);
+    left: var(--space-2);
+    z-index: calc(var(--z-modal) + 1);
+    padding: var(--space-2) var(--space-4);
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-medium);
+    color: var(--color-text-inverse);
+    background-color: var(--color-accent);
+    border-radius: var(--radius-sm);
+    transform: translateY(-200%);
+    transition: transform var(--transition-fast);
+
+    &:focus {
+        transform: translateY(0);
+        outline: 2px solid var(--color-border-focus);
+        outline-offset: 2px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .fade-in,
+    .section--animate {
+        animation: none !important;
+        opacity: 1 !important;
+        transform: none !important;
+    }
 }

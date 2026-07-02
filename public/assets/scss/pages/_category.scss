@@ -1,7 +1,7 @@
 .category-page {
     display: flex;
     flex-direction: column;
-    gap: var(--space-8);
+    gap: var(--space-10);
 }
 
 .category-page__header {
@@ -55,11 +55,15 @@
     transition:
         color var(--transition-fast),
         border-color var(--transition-fast),
-        background-color var(--transition-fast);
+        background-color var(--transition-fast),
+        transform var(--duration-hover) var(--ease-out),
+        box-shadow var(--transition-fast);
 
     &:hover {
         color: var(--color-text);
         border-color: var(--color-border-hover);
+        transform: translateY(-1px);
+        box-shadow: var(--shadow-xs);
     }
 
     &:focus-visible {
@@ -89,4 +93,20 @@
 .welcome__text {
     font-size: var(--font-size-lg);
     line-height: var(--line-height-base);
+}
+
+@media (max-width: 30rem) {
+    .sort-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: var(--space-3);
+    }
+
+    .sort-bar__options {
+        width: 100%;
+    }
+
+    .category-page__header {
+        gap: var(--space-2);
+    }
 }

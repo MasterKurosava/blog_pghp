@@ -22,6 +22,7 @@
 @use 'components/navigation/breadcrumb';
 @use 'components/navigation/pagination';
 @use 'components/feedback/empty-state';
+@use 'components/feedback/skeleton';
 @use 'pages/home';
 @use 'pages/category';
 @use 'pages/article';

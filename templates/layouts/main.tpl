@@ -4,9 +4,11 @@
     {include file="partials/head.tpl"}
 </head>
 <body>
+    <a href="#main-content" class="skip-link">Перейти к содержимому</a>
+
     {include file="partials/header.tpl"}
 
-    <main class="main{if $mainClass} {$mainClass|escape}{/if}">
+    <main id="main-content" class="main{if $mainClass} {$mainClass|escape}{/if}" tabindex="-1">
         {if $fullWidthContent}
             {$content nofilter}
         {else}

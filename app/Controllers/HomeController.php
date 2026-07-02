@@ -22,6 +22,11 @@ final class HomeController extends Controller
 
     public function index(): Response
     {
-        return $this->render('pages/home', $this->home->getIndexPageData());
+        $data = $this->home->getIndexPageData();
+        $data['metaDescription'] = (string) config('home.meta_description', '');
+        $data['canonical'] = url('/');
+        $data['ogDescription'] = $data['metaDescription'];
+
+        return $this->render('pages/home', $data);
     }
 }

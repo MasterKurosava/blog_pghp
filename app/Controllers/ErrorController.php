@@ -13,7 +13,12 @@ final class ErrorController extends Controller
     public function notFound(string $message = 'Страница не найдена'): Response
     {
         return $this->response->view('pages/errors/404', [
-            'title' => $message,
+            'title' => 'Страница не найдена',
+            'heading' => $message,
+            'metaDescription' => 'Запрашиваемая страница не найдена.',
+            'robots' => 'noindex, nofollow',
+            'homeUrl' => url('/'),
+            'mainClass' => 'main--error',
         ], 404);
     }
 
@@ -21,7 +26,12 @@ final class ErrorController extends Controller
     {
         return $this->response->view('pages/errors/500', [
             'title' => 'Ошибка сервера',
+            'heading' => 'Что-то пошло не так',
             'message' => $message,
+            'metaDescription' => 'На сервере произошла ошибка.',
+            'robots' => 'noindex, nofollow',
+            'homeUrl' => url('/'),
+            'mainClass' => 'main--error',
         ], 500);
     }
 }

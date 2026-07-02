@@ -20,6 +20,11 @@
         color: var(--color-text);
     }
 
+    &:focus-visible {
+        outline: 2px solid var(--color-border-focus);
+        outline-offset: 2px;
+    }
+
     &--accent {
         color: var(--color-accent);
         border-color: var(--color-accent-muted);

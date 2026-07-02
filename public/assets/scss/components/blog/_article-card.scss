@@ -5,16 +5,17 @@
     flex-direction: column;
     height: 100%;
 
-    &:hover .article-card__image {
-        transform: scale(1.04);
+    @include motion-safe {
+        &:hover .article-card__image {
+            transform: scale(1.04);
+        }
     }
 }
 
 .article-card__media {
+    @include image-media;
     display: block;
-    overflow: hidden;
     aspect-ratio: 16 / 9;
-    background-color: var(--color-bg-muted);
 }
 
 .article-card__image {
@@ -49,6 +50,12 @@
 
     &:hover {
         color: var(--color-accent);
+    }
+
+    &:focus-visible {
+        outline: 2px solid var(--color-border-focus);
+        outline-offset: 2px;
+        border-radius: var(--radius-sm);
     }
 }
 

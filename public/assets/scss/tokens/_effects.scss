@@ -14,4 +14,11 @@
     --transition-fast: 0.15s ease;
     --transition-base: 0.25s ease;
     --transition-slow: 0.4s ease;
+
+    --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+    --duration-hover: 0.2s;
+    --duration-fade: 0.45s;
+
+    --skeleton-base: #f4f4f5;
+    --skeleton-highlight: #fafafa;
 }

@@ -54,3 +54,37 @@
         @content;
     }
 }
+
+@mixin skeleton-shimmer {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+        90deg,
+        var(--skeleton-base) 0%,
+        var(--skeleton-highlight) 50%,
+        var(--skeleton-base) 100%
+    );
+    background-size: 200% 100%;
+    transition: opacity var(--transition-base), visibility var(--transition-base);
+    pointer-events: none;
+
+    @include motion-safe {
+        animation: skeleton-shimmer 1.4s ease-in-out infinite;
+    }
+}
+
+@mixin image-media {
+    position: relative;
+    overflow: hidden;
+    background-color: var(--color-bg-muted);
+
+    &::before {
+        @include skeleton-shimmer;
+    }
+
+    &.is-loaded::before {
+        opacity: 0;
+        visibility: hidden;
+    }
+}

@@ -9,6 +9,8 @@
                 class="article-page__hero-image"
                 width="1200"
                 height="630"
+                decoding="async"
+                fetchpriority="high"
             >
         </figure>
     {/if}

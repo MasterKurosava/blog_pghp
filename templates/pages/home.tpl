@@ -7,11 +7,17 @@
                 {include file="components/blog/category-section.tpl" category=$category}
             {/foreach}
         {else}
-            {include file="components/feedback/empty-state.tpl"
-                title='Материалы скоро появятся'
-                description='Мы готовим свежие публикации. Загляните позже.'
-                icon='file'
-            }
+            <div class="home__empty">
+                <div class="home__empty-skeleton" aria-hidden="true">
+                    {include file="components/feedback/skeleton-group.tpl" count=3}
+                </div>
+
+                {include file="components/feedback/empty-state.tpl"
+                    title='Материалы скоро появятся'
+                    description='Мы готовим свежие публикации. Загляните позже.'
+                    icon='file'
+                }
+            </div>
         {/if}
     {/capture}
 

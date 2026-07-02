@@ -2,7 +2,7 @@
     <div class="hero__decor" aria-hidden="true"></div>
 
     {capture assign="_heroContent"}
-        <div class="hero__inner fade-in">
+        <div class="hero__inner section--animate">
             {if $hero.badge}
                 <div class="hero__badge">
                     {include file="components/ui/badge.tpl" label=$hero.badge variant='category'}

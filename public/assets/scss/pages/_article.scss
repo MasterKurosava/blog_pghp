@@ -1,18 +1,22 @@
+@use '../tools/mixins' as *;
+
 .article-page {
     display: flex;
     flex-direction: column;
-    gap: var(--space-8);
+    gap: var(--space-10);
 }
 
 .article-page__hero {
+    @include image-media;
     overflow: hidden;
     border: 1px solid var(--color-border);
     border-radius: var(--radius-lg);
-    background-color: var(--color-bg-muted);
 }
 
 .article-page__hero-image {
+    display: block;
     width: 100%;
+    height: auto;
     max-height: 28rem;
     object-fit: cover;
 }
@@ -177,10 +181,6 @@
         color: var(--color-text);
     }
 
-    img {
-        border-radius: var(--radius-md);
-    }
-
     a {
         color: var(--color-accent);
         text-decoration: underline;
@@ -189,6 +189,20 @@
         &:hover {
             color: var(--color-accent-hover);
         }
+
+        &:focus-visible {
+            outline: 2px solid var(--color-border-focus);
+            outline-offset: 2px;
+            border-radius: var(--radius-sm);
+        }
+    }
+
+    img {
+        display: block;
+        width: 100%;
+        height: auto;
+        object-fit: cover;
+        border-radius: var(--radius-md);
     }
 }
 

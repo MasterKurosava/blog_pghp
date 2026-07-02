@@ -56,6 +56,11 @@
         background-color: var(--color-accent-hover);
         color: var(--color-text-inverse);
         box-shadow: var(--shadow-sm);
+        transform: translateY(-1px);
+    }
+
+    &:active {
+        transform: translateY(0);
     }
 }
 

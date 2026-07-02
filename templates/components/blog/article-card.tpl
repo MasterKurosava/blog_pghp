@@ -34,12 +34,13 @@
 
 {capture assign="_cardContent"}
     {if $_showImage && $_url}
-        <a href="{$_url|escape}" class="article-card__media" tabindex="-1" aria-hidden="true">
+        <a href="{$_url|escape}" class="article-card__media" tabindex="-1" aria-label="{$_title|escape}">
             <img
                 src="{$_image|escape}"
                 alt=""
                 class="article-card__image"
                 loading="lazy"
+                decoding="async"
                 width="400"
                 height="225"
             >
@@ -51,6 +52,7 @@
                 alt="{$_title|escape}"
                 class="article-card__image"
                 loading="lazy"
+                decoding="async"
                 width="400"
                 height="225"
             >
